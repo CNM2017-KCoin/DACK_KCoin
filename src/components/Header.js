@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-// import {Link} from 'react-router';
+import React from 'react';
+import {Link} from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -58,7 +58,7 @@ class Header extends React.Component {
                   >
                     <MenuItem primaryText="Sign out" 
                         onClick={(event) => this.handleClick(event)}
-                        // containerElement={<Link to="/login"/>}
+                        containerElement={<Link to="/login"/>}
                         />
                   </IconMenu>
                 </div>

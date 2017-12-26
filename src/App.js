@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MyAwesomeReactComponent from './MyAwesomeReactComponent';
-import HomePage from './containers/App';
+import { Router, browserHistory } from 'react-router';
+import Routes from './routes';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
   render() {
     return (
-    	<MuiThemeProvider>
-	    	<HomePage />
-	 	</MuiThemeProvider>
+  		<Router routes={Routes} history={browserHistory} />
     );
   }
 }
