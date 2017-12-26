@@ -6,7 +6,7 @@ import withWidth, {LARGE, SMALL} from 'material-ui/utils/withWidth';
 import ThemeDefault from '../theme-default';
 import Data from '../data';
 
-class App extends React.Component {
+class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
@@ -60,4 +60,4 @@ class App extends React.Component {
   }
 }
 
-export default withWidth()(App);
+export default withWidth()(HomePage);

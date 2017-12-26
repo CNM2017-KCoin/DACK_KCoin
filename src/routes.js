@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import App from './containers/App';
+import HomePage from './containers/HomePage';
 import NotFoundPage from './containers/NotFoundPage.js';
 import LoginPage from './containers/LoginPage';
 import AddTransactionPage from './containers/AddTransactionPage';
@@ -12,7 +12,7 @@ export default (
   <Route>
     <Route path="login" component={LoginPage}/>
     <Route path="register" component={RegisterPage}/>
-    <Route path="/" component={App}>
+    <Route path="/" component={HomePage}>
       <Route path="dashboard" component={Dashboard}/>
       <Route path="addTransaction" component={AddTransactionPage}/>
       <Route path="transactionDetail" component={TransactionDetailPage}/>

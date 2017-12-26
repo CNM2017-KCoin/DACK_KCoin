@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import {white, grey800} from 'material-ui/styles/colors';
 import {typography} from 'material-ui/styles';
@@ -57,5 +58,12 @@ class InfoBox extends React.Component {
       );
   }
 }
+
+InfoBox.propTypes = {
+  Icon: PropTypes.any, // eslint-disable-line
+  color: PropTypes.string,
+  title: PropTypes.string,
+  value: PropTypes.string
+};
 
 export default InfoBox;

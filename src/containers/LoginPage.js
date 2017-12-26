@@ -8,7 +8,6 @@ import FlatButton from 'material-ui/FlatButton';
 import {grey500, white} from 'material-ui/styles/colors';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import TextField from 'material-ui/TextField';
-import {Link} from 'react-router';
 import ThemeDefault from '../theme-default';
 import Data from '../data';
 
