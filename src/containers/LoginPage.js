@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import {browserHistory} from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
@@ -15,42 +15,42 @@ import Data from '../data';
 
 class LoginPage extends React.Component {
 
-  handleClick(event){
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+  // handleClick(event){
+  //   const email = document.getElementById('email').value;
+  //   const password = document.getElementById('password').value;
     
-    if(email == "" || password == "") {
-      alert("Fill in text box");
-      return;
-    }
+  //   if(email == "" || password == "") {
+  //     alert("Fill in text box");
+  //     return;
+  //   }
 
-    console.log(email);
-    console.log(password);
-    const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    axios.post(apiLink+'/users/checklogin', {
-      "email":email,
-      "password":password
-    })
-    .then(function (response) {
-      console.log(response);
-      if(response.status == 200){
-        alert("Login successful");
-        Data.user.email = email;
-        browserHistory.push('/dashboard');
-        return;
-      }
-      else{
-        alert("Login failed");
-        browserHistory.push('/login');
-        return;
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert('Login failed', error);
-      return;
-    });
-   }
+  //   console.log(email);
+  //   console.log(password);
+  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+  //   axios.post(apiLink+'/users/checklogin', {
+  //     "email":email,
+  //     "password":password
+  //   })
+  //   .then(function (response) {
+  //     console.log(response);
+  //     if(response.status == 200){
+  //       alert("Login successful");
+  //       Data.user.email = email;
+  //       browserHistory.push('/dashboard');
+  //       return;
+  //     }
+  //     else{
+  //       alert("Login failed");
+  //       browserHistory.push('/login');
+  //       return;
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //     alert('Login failed', error);
+  //     return;
+  //   });
+  //  }
 
   render() {
 
@@ -138,7 +138,7 @@ class LoginPage extends React.Component {
 
                   <RaisedButton label="Login"
                     primary={true}
-                    onClick={(event) => this.handleClick(event)}
+                    // onClick={(event) => this.handleClick(event)}
                     style={styles.loginBtn}/>
                 </div>
               </form>

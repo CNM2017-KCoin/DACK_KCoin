@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -13,41 +13,41 @@ import ThemeDefault from '../theme-default';
 
 class RegisterPage extends React.Component {
 
-  handleClick(event){
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const vertifyPass = document.getElementById('vertifyPass').value;
+  // handleClick(event){
+  //   const name = document.getElementById('name').value;
+  //   const email = document.getElementById('email').value;
+  //   const password = document.getElementById('password').value;
+  //   const vertifyPass = document.getElementById('vertifyPass').value;
 
-    if(name == "" || email=="" || password=="" || vertifyPass=="") {
-      alert('Input to text fields');
-      return;
-    }
+  //   if(name == "" || email=="" || password=="" || vertifyPass=="") {
+  //     alert('Input to text fields');
+  //     return;
+  //   }
     
-    if(password != vertifyPass) {
-      alert('Vertify password failed');
-      return;
-    }
+  //   if(password != vertifyPass) {
+  //     alert('Vertify password failed');
+  //     return;
+  //   }
     
-    const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    axios.post(apiLink+'/users', {
-      "name":name,
-      "email":email,
-      "password":password,
-      "transactions":[]
-    })
-    .then(function (response) {
-      console.log(response);
-      alert('Register Successfully');
-      browserHistory.push('/login');
-      return;
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert('Register failed', error);
-      return;
-    });
-  }
+  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+  //   axios.post(apiLink+'/users', {
+  //     "name":name,
+  //     "email":email,
+  //     "password":password,
+  //     "transactions":[]
+  //   })
+  //   .then(function (response) {
+  //     console.log(response);
+  //     alert('Register Successfully');
+  //     browserHistory.push('/login');
+  //     return;
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //     alert('Register failed', error);
+  //     return;
+  //   });
+  // }
 
   render() {
     const styles = {
@@ -129,7 +129,7 @@ class RegisterPage extends React.Component {
 
                   <RaisedButton label="Submit"
                       style={styles.saveButton}
-                      onClick={(event) => this.handleClick(event)}
+                      // onClick={(event) => this.handleClick(event)}
                       primary={true}/>
                 </div>
               </form>
