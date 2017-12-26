@@ -3,13 +3,13 @@ import { render } from 'react-dom';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MyAwesomeReactComponent from './MyAwesomeReactComponent';
-import Game from './Game';
+import HomePage from './containers/App';
 
 class App extends Component {
   render() {
     return (
     	<MuiThemeProvider>
-	    	<MyAwesomeReactComponent />
+	    	<HomePage />
 	 	</MuiThemeProvider>
     );
   }
