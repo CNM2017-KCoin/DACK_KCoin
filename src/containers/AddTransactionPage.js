@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -11,36 +11,36 @@ import Data from '../data';
 
 class AddTransactionPage extends React.Component {
 
-  handleClick(event){
-    const email = document.getElementById('email').value;
-    const amount = document.getElementById('amount').value;
+  // handleClick(event){
+  //   const email = document.getElementById('email').value;
+  //   const amount = document.getElementById('amount').value;
 
-    if(email == "" || amount == "") {
-      alert('input to text box');
-      return;
-    }
+  //   if(email == "" || amount == "") {
+  //     alert('input to text box');
+  //     return;
+  //   }
 
-    const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    axios.post(apiLink+'/users/'+Data.user.email, {
-      "emailReceiver":email,
-      "amountTransaction":parseInt(amount)
-    })
-    .then(function (response) {
-      console.log(response);
-      if(response.status == 200){
-        alert('Add Transaction Successfully');
-      } else if(response.status == 304) {
-        alert('Money is not enough');
-      } else if(response.status == 305) {
-        alert('Email receiver is not exist');
-      }
-      browserHistory.push('/transactionDetail');
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert('Add Transaction failed');
-    });
-   }
+  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+  //   axios.post(apiLink+'/users/'+Data.user.email, {
+  //     "emailReceiver":email,
+  //     "amountTransaction":parseInt(amount)
+  //   })
+  //   .then(function (response) {
+  //     console.log(response);
+  //     if(response.status == 200){
+  //       alert('Add Transaction Successfully');
+  //     } else if(response.status == 304) {
+  //       alert('Money is not enough');
+  //     } else if(response.status == 305) {
+  //       alert('Email receiver is not exist');
+  //     }
+  //     browserHistory.push('/transactionDetail');
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //     alert('Add Transaction failed');
+  //   });
+  //  }
 
   render() {
     const styles = {
@@ -90,7 +90,7 @@ class AddTransactionPage extends React.Component {
 
             <RaisedButton label="Save"
               style={styles.saveButton}
-              onClick={(event) => this.handleClick(event)}
+              // onClick={(event) => this.handleClick(event)}
               primary={true}/>
           </div>
         </form>

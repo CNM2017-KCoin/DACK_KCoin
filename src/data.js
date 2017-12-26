@@ -9,8 +9,33 @@ import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 
 const data = {
   user:{
-    email:"test@gmail.com",
-    // password:"test"
+    name: "test",
+    email: "test@gmail.com",
+    password: "test",
+    amountWallet: 700,
+    transactions: [
+        {
+            emailReceiver: "nguyenvanb@gmail.com",
+            amountTransaction: 4000,
+            _id: {
+                $oid: "5a1d43b5c835d3140091ef5c"
+            }
+        },
+        {
+            emailReceiver: "nguyenvanb@gmail.com",
+            amountTransaction: 4000,
+            _id: {
+                $oid: "5a1d470a9f544914005ff4bf"
+            }
+        },
+        {
+            emailReceiver: "nguyenvanb@gmail.com",
+            amountTransaction: 4000,
+            _id: {
+                $oid: "5a1d47a99f544914005ff4c0"
+            }
+        }
+    ]
   },
   menus: [
     { text: 'DashBoard', icon: <Assessment/>, link: '/dashboard' },

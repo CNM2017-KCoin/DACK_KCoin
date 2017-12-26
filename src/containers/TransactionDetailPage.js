@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
@@ -12,29 +12,29 @@ import {connect} from 'react-redux';
 import * as actions from './../actions/index.js';
 
 class TransactionDetailPage extends React.Component {
-  loadData() {
-    var self = this;
-    const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    axios.get(apiLink+'/users/'+Data.user.email)
-    .then(function (response) {
-      console.log(response.data);
-      self.props.dispatch(actions.getData(response.data));
-    })
-    .catch(function (error) {
-      console.log('Request failed', error);
-    });
-  }
+  // loadData() {
+  //   var self = this;
+  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+  //   axios.get(apiLink+'/users/'+Data.user.email)
+  //   .then(function (response) {
+  //     console.log(response.data);
+  //     self.props.dispatch(actions.getData(response.data));
+  //   })
+  //   .catch(function (error) {
+  //     console.log('Request failed', error);
+  //   });
+  // }
 
-  componentDidMount() {
-    this.loadData();    
-  }
+  // componentDidMount() {
+  //   this.loadData();    
+  // }
 
-  componentWillReceiveProps() {
-    this.loadData();
-  }
+  // componentWillReceiveProps() {
+  //   this.loadData();
+  // }
 
   render() {
-    const transactions = this.props.user.transactions;
+    const transactions = Data.user.transactions;
     if(transactions == null) {
       return(<div>The responsive it not here yet!</div>);
     }
@@ -106,4 +106,6 @@ const mapStateToProps = (state) =>{
     user: state.mainReducer.user
   };
 }
-export default connect (mapStateToProps)(TransactionDetailPage);
+// export default connect (mapStateToProps)(TransactionDetailPage);
+
+export default TransactionDetailPage;
