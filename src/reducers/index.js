@@ -1,10 +1,21 @@
-import { combineReducers } from 'redux'
-import todos from './todos'
-import visibilityFilter from './visibilityFilter'
+import {combineReducers} from 'redux';
 
-const todoApp = combineReducers({
-  todos,
-  visibilityFilter
-})
+const initState = {
+  user: {
+    email:"test@gmail.com"
+  }
+}
 
-export default todoApp
+const mainReducer = (state = initState, action) => {
+  switch(action.type){
+    case "LOAD_USER":
+      return {
+        user: action.data
+      }
+      break;
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({mainReducer});

@@ -1,22 +1,8 @@
-let nextTodoId = 0
-export const addTodo = text => {
-  return {
-    type: 'ADD_TODO',
-    id: nextTodoId++,
-    text
-  }
-}
+const LOAD_DATA = 'LOAD_USER';
+/*
+ * action creators
+ */
 
-export const setVisibilityFilter = filter => {
-  return {
-    type: 'SET_VISIBILITY_FILTER',
-    filter
-  }
-}
-
-export const toggleTodo = id => {
-  return {
-    type: 'TOGGLE_TODO',
-    id
-  }
+export function getData(responseData) {
+  return { type: LOAD_DATA, data: responseData }
 }
