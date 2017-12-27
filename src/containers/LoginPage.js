@@ -11,45 +11,53 @@ import TextField from 'material-ui/TextField';
 import ThemeDefault from '../theme-default';
 import Data from '../data';
 
+const Utils = require('../services/utils');
 
 class LoginPage extends React.Component {
 
-  handleClick(event){
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+  // handleClick(event){
+  //   const email = document.getElementById('email').value;
+  //   const password = document.getElementById('password').value;
     
-    if(email == "" || password == "") {
-      alert("Fill in text box");
-      return;
-    }
+  //   if(email == "" || password == "") {
+  //     alert("Fill in text box");
+  //     return;
+  //   }
 
-    console.log(email);
-    console.log(password);
-    const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    axios.post(apiLink+'/users/checklogin', {
-      "email":email,
-      "password":password
-    })
-    .then(function (response) {
-      console.log(response);
-      if(response.status == 200){
-        alert("Login successful");
-        Data.user.email = email;
-        browserHistory.push('/dashboard');
-        return;
-      }
-      else{
-        alert("Login failed");
-        browserHistory.push('/login');
-        return;
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert('Login failed', error);
-      return;
-    });
-   }
+  //   console.log(email);
+  //   console.log(password);
+  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+  //   axios.post(apiLink+'/users/checklogin', {
+  //     "email":email,
+  //     "password":password
+  //   })
+  //   .then(function (response) {
+  //     console.log(response);
+  //     if(response.status == 200){
+  //       alert("Login successful");
+  //       Data.user.email = email;
+  //       browserHistory.push('/dashboard');
+  //       return;
+  //     }
+  //     else{
+  //       alert("Login failed");
+  //       browserHistory.push('/login');
+  //       return;
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //     alert('Login failed', error);
+  //     return;
+  //   });
+  //  }
+  handleClick(event) {
+    const message = "pass here";
+
+    var address = Utils.hash(message).toString('hex');
+    console.log(address);
+
+  }
 
   render() {
 
