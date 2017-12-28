@@ -1,9 +1,12 @@
 import React from 'react';
+import {browserHistory} from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Header from '../components/Header';
 import LeftDrawer from '../components/LeftDrawer';
 import withWidth, {LARGE, SMALL} from 'material-ui/utils/withWidth';
 import ThemeDefault from '../theme-default';
+import HomeIco from 'material-ui/svg-icons/action/home';
+import DetailIco from 'material-ui/svg-icons/action/assessment';
 import Data from '../data';
 
 class HomePage extends React.Component {
@@ -13,6 +16,16 @@ class HomePage extends React.Component {
     this.state = {
       navDrawerOpen: false
     };
+    this.menus = [
+        { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
+        { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
+      ];
+  }
+
+  componentWillMount(){
+    if(Data.user.email == "") {
+      browserHistory.push('/login');
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -48,7 +61,7 @@ class HomePage extends React.Component {
                   handleChangeRequestNavDrawer={this.handleChangeRequestNavDrawer.bind(this)}/>
 
             <LeftDrawer navDrawerOpen={navDrawerOpen}
-                        menus={Data.menus}
+                        menus={this.menus}
                         username={Data.user.email}/>
 
             <div style={styles.container}>

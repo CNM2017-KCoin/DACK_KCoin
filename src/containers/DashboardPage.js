@@ -1,9 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import {browserHistory} from 'react-router';
-import {pink600, purple600} from 'material-ui/styles/colors';
+import {pink600, purple600, orange600} from 'material-ui/styles/colors';
 import Assessment from 'material-ui/svg-icons/action/assessment';
-import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
+import RealMoneyIco from 'material-ui/svg-icons/editor/attach-money';
+import UsedMoneyIco from 'material-ui/svg-icons/editor/monetization-on';
+
+import AddressIco from 'material-ui/svg-icons/action/code';
 import InfoBox from '../components/dashboard/InfoBox';
 import RecentTransaction from '../components/dashboard/RecentTransaction';
 import globalStyles from '../styles';
@@ -32,7 +35,11 @@ class DashboardPage extends React.Component {
   // componentDidMount() {
   //   this.loadData();
   // }
-
+  componentWillMount(){
+    if(Data.user.email == "") {
+      browserHistory.push('/login');
+    }
+  }
 
   render() {
     // const user = this.props.user;
@@ -42,22 +49,29 @@ class DashboardPage extends React.Component {
     }
     return (
       <div>
-        <h3 style={globalStyles.navigation}>Application / Dashboard</h3>
+        <h3 style={globalStyles.navigation}>Ví KCoin / Trang chủ</h3>
 
         <div className="row">
 
-          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
-            <InfoBox Icon={ShoppingCart}
+          <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+            <InfoBox Icon={RealMoneyIco}
                      color={pink600}
-                     title="Total Money"
+                     title="Số dư thực tế"
                      value={user.amountWallet+''}
             />
           </div>
 
-          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
-            <InfoBox Icon={Assessment}
+          <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+            <InfoBox Icon={UsedMoneyIco}
                      color={purple600}
-                     title="Total transaction"
+                     title="Số dư khả dụng"
+                     value={user.transactions.length+''}
+            />
+          </div>
+          <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+            <InfoBox Icon={AddressIco}
+                     color={orange600}
+                     title="Địa chỉ giao dịch"
                      value={user.transactions.length+''}
             />
           </div>

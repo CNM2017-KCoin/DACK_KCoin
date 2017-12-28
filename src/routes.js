@@ -10,12 +10,13 @@ import Dashboard from './containers/DashboardPage';
 
 export default (
   <Route>
-    <Route path="login" component={LoginPage}/>
     <Route path="register" component={RegisterPage}/>
+    <Route path="login" component={LoginPage}/>
     <Route path="/" component={HomePage}>
+      <IndexRoute component={Dashboard}/>
       <Route path="dashboard" component={Dashboard}/>
       <Route path="addTransaction" component={AddTransactionPage}/>
-      <Route path="transactionDetail" component={TransactionDetailPage}/>
+      <Route path="transactions" component={TransactionDetailPage}/>
       <Route path="*" component={NotFoundPage}/>
     </Route>
   </Route>

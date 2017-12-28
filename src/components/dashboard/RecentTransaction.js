@@ -11,7 +11,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import {grey400, cyan600, white} from 'material-ui/styles/colors';
 import {typography} from 'material-ui/styles';
-import Wallpaper from 'material-ui/svg-icons/device/wallpaper';
+import Wallpaper from 'material-ui/svg-icons/editor/attach-money';
 
 const RecentTransaction = (props) => {
 
@@ -34,22 +34,19 @@ const RecentTransaction = (props) => {
   );
 
   const rightIconMenu = (
-    <IconMenu iconButtonElement={iconButtonElement}>
-      <MenuItem>View</MenuItem>
-    </IconMenu>
+    <Avatar icon={<Wallpaper />} />
   );
 
   return (
     <Paper>
       <List>
-        <Subheader style={styles.subheader}>Recent Transaction</Subheader>
+        <Subheader style={styles.subheader}>Recent Transactions</Subheader>
         {props.data.map(item =>
           <div key={item._id}>
             <ListItem
               leftAvatar={<Avatar icon={<Wallpaper />} />}
               primaryText={"Amount:"+ item.amountTransaction}
               secondaryText={"To:" + item.emailReceiver}
-              rightIconButton={rightIconMenu}
             />
             <Divider inset={true} />
           </div>

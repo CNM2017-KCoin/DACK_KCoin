@@ -41,7 +41,6 @@ class LoginPage extends React.Component {
   //     }
   //     else{
   //       alert("Login failed");
-  //       browserHistory.push('/login');
   //       return;
   //     }
   //   })
@@ -55,6 +54,8 @@ class LoginPage extends React.Component {
     const message = "pass here";
 
     var address = Utils.hash(message).toString('hex');
+    Data.user.email = "test@gmail.com";
+    browserHistory.push('/dashboard');
     console.log(address);
 
   }

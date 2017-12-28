@@ -51,7 +51,7 @@ const LeftDrawer = (props) => {
       docked={true}
       open={navDrawerOpen}>
         <div style={styles.logo}>
-          Material Admin
+          Ví KCoin
         </div>
         <div style={styles.avatar.div}>
           <Avatar src="http://www.material-ui.com/images/uxceo-128.jpg"

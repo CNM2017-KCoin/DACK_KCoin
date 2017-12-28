@@ -2,16 +2,28 @@ import React from 'react';
 // import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableCell, TableRowColumn, TablePagination, TableFooter} from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {pink500, grey500} from 'material-ui/styles/colors';
+import Divider from 'material-ui/Divider';
 import PageBase from '../components/PageBase';
 import Data from '../data';
 import {connect} from 'react-redux';
 import * as actions from './../actions/index.js';
 
 class TransactionDetailPage extends React.Component {
+  constructor() {
+          super();
+    
+          this.state = {
+            page: 0,
+            rowsPerPage: 5,
+          };
+
+            // this.updateRows = this.updateRows.bind(this);
+      }
   // loadData() {
   //   var self = this;
   //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
@@ -32,9 +44,24 @@ class TransactionDetailPage extends React.Component {
   // componentWillReceiveProps() {
   //   this.loadData();
   // }
+  componentWillMount(){
+    if(Data.user.email == "") {
+      browserHistory.push('/login');
+    }
+  }
+
+  handleChangePage = (event, page) => {
+    this.setState({ page });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({ rowsPerPage: event.target.value });
+  };
 
   render() {
     const transactions = Data.user.transactions;
+    const {rowsPerPage, page } = this.state;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, transactions.length - page * rowsPerPage);
     if(transactions == null) {
       return(<div>The responsive it not here yet!</div>);
     }
@@ -69,9 +96,7 @@ class TransactionDetailPage extends React.Component {
       }
     };
     return (
-      <PageBase title="Transaction Detail"
-                navigation="Application / Transaction Detail">
-
+      <Paper>
         <div>
           <Link to="/addTransaction" >
             <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
@@ -87,16 +112,24 @@ class TransactionDetailPage extends React.Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.map(item =>
+              {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(item =>
                 <TableRow key={item._id}>
                   <TableRowColumn style={styles.columns.name}>{item.emailReceiver}</TableRowColumn>
                   <TableRowColumn style={styles.columns.price}>{item.amountTransaction}</TableRowColumn>
+             
+                </TableRow>
+              )}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 49 * emptyRows }}>
+                  <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>
-          </Table>    
+            <TableFooter>
+            </TableFooter>
+          </Table>
         </div>
-      </PageBase>
+      </Paper>
     );
   }
 }

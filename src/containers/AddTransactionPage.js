@@ -41,6 +41,11 @@ class AddTransactionPage extends React.Component {
   //     alert('Add Transaction failed');
   //   });
   //  }
+  componentWillMount(){
+    if(Data.user.email == "") {
+      browserHistory.push('/login');
+    }
+  }
 
   render() {
     const styles = {
