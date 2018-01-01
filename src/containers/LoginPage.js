@@ -59,14 +59,14 @@ class LoginPage extends React.Component {
     const txtEmail = document.getElementById('email');
     const txtPassword = document.getElementById('password');
 
-    // if(txtEmail.value == "") {
-    //   this.setState({ errorTxtEmail: 'Email is required' })
-    //   return;
-    // }
-    // if(txtPassword.value == "") {
-    //   this.setState({ errorTxtPass: 'Password is required' })
-    //   return;
-    // }
+    if(txtEmail.value == "") {
+      this.setState({ errorTxtEmail: 'Email is required' })
+      return;
+    }
+    if(txtPassword.value == "") {
+      this.setState({ errorTxtPass: 'Password is required' })
+      return;
+    }
 
     var passwordHash = Utils.hash(txtPassword.value).toString('hex');
     //send request
