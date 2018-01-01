@@ -2,28 +2,28 @@ import React from 'react';
 // import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableCell, TableRowColumn, TablePagination, TableFooter} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableCell, TableRowColumn, TableFooter} from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {pink500, grey500} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
-import PageBase from '../components/PageBase';
 import Data from '../data';
 import {connect} from 'react-redux';
-import * as actions from './../actions/index.js';
+// import * as actions from './../actions/index.js';
+import globalStyles from '../styles';
 
 class TransactionDetailPage extends React.Component {
   constructor() {
-          super();
-    
-          this.state = {
-            page: 0,
-            rowsPerPage: 5,
-          };
+      super();
 
-            // this.updateRows = this.updateRows.bind(this);
-      }
+      this.state = {
+        page: 0,
+        rowsPerPage: 5,
+      };
+
+        // this.updateRows = this.updateRows.bind(this);
+  }
   // loadData() {
   //   var self = this;
   //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
@@ -96,40 +96,48 @@ class TransactionDetailPage extends React.Component {
       }
     };
     return (
-      <Paper>
-        <div>
-          <Link to="/addTransaction" >
-            <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
-              <ContentAdd />
-            </FloatingActionButton>
-          </Link>
+      <div>
+        <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+        
+        <Paper style={globalStyles.paper}>
+          <h3 style={globalStyles.title}>Chi tiết giao dịch</h3>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHeaderColumn style={styles.columns.name}>Receiver</TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.price}>Amount</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(item =>
-                <TableRow key={item._id}>
-                  <TableRowColumn style={styles.columns.name}>{item.emailReceiver}</TableRowColumn>
-                  <TableRowColumn style={styles.columns.price}>{item.amountTransaction}</TableRowColumn>
-             
+          <div>
+            <Link to="/addTransaction" >
+              <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
+                <ContentAdd />
+              </FloatingActionButton>
+            </Link>
+
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderColumn style={styles.columns.name}>Receiver</TableHeaderColumn>
+                  <TableHeaderColumn style={styles.columns.price}>Amount</TableHeaderColumn>
                 </TableRow>
-              )}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-            </TableFooter>
-          </Table>
-        </div>
-      </Paper>
+              </TableHeader>
+              <TableBody>
+                {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(item =>
+                  <TableRow key={item._id}>
+                    <TableRowColumn style={styles.columns.name}>{item.emailReceiver}</TableRowColumn>
+                    <TableRowColumn style={styles.columns.price}>{item.amountTransaction}</TableRowColumn>
+               
+                  </TableRow>
+                )}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+              </TableFooter>
+            </Table>
+          </div>
+
+          <div style={globalStyles.clear}/>
+        </Paper>
+      </div>
     );
   }
 }

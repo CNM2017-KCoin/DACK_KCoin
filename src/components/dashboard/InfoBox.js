@@ -28,10 +28,11 @@ class InfoBox extends React.Component {
       },
       iconSpan: {
         float: 'left',
-        height: 90,
-        width: 90,
+        height: 80,
+        width: 80,
         textAlign: 'center',
-        backgroundColor: color
+        backgroundColor: color,
+        marginBottom: 10
       },
       icon: {
         height: 48,

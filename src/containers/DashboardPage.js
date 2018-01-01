@@ -11,8 +11,8 @@ import InfoBox from '../components/dashboard/InfoBox';
 import RecentTransaction from '../components/dashboard/RecentTransaction';
 import globalStyles from '../styles';
 import Data from '../data';
-import {connect} from 'react-redux';
-import * as actions from './../actions/index.js';
+// import {connect} from 'react-redux';
+// import * as actions from './../actions/index.js';
 
 class DashboardPage extends React.Component {
   // loadData() {
@@ -53,7 +53,7 @@ class DashboardPage extends React.Component {
 
         <div className="row">
 
-          <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
             <InfoBox Icon={RealMoneyIco}
                      color={pink600}
                      title="Số dư thực tế"
@@ -61,14 +61,14 @@ class DashboardPage extends React.Component {
             />
           </div>
 
-          <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
             <InfoBox Icon={UsedMoneyIco}
                      color={purple600}
                      title="Số dư khả dụng"
                      value={user.transactions.length+''}
             />
           </div>
-          <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
             <InfoBox Icon={AddressIco}
                      color={orange600}
                      title="Địa chỉ giao dịch"
@@ -78,7 +78,7 @@ class DashboardPage extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
-            <RecentTransaction data={user.transactions}/>
+            <RecentTransaction data={user.transactions} title="Recent transactions"/>
           </div>
         </div>
       </div>
