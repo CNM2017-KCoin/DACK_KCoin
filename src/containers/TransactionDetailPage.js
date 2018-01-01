@@ -8,6 +8,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {pink500, grey500} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
+import Cookies from 'universal-cookie';
 import Data from '../data';
 import {connect} from 'react-redux';
 // import * as actions from './../actions/index.js';
@@ -45,7 +46,11 @@ class TransactionDetailPage extends React.Component {
   //   this.loadData();
   // }
   componentWillMount(){
-    if(Data.user.email == "") {
+
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    console.log(email);  
+    if(email == "") {
       browserHistory.push('/login');
     }
   }

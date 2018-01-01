@@ -11,43 +11,93 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import ThemeDefault from '../theme-default';
 
+import Data from '../data';
+const Utils = require('../services/utils');
+
 class RegisterPage extends React.Component {
 
-  // handleClick(event){
-  //   const name = document.getElementById('name').value;
-  //   const email = document.getElementById('email').value;
-  //   const password = document.getElementById('password').value;
-  //   const vertifyPass = document.getElementById('vertifyPass').value;
+  constructor(props) {
+    super(props)
+    this.state = { 
+      errorTxtPass: '', 
+      errorTxtEmail: '',
+      errorTxtVertifyPass: ''
+    }
+  }
 
-  //   if(name == "" || email=="" || password=="" || vertifyPass=="") {
-  //     alert('Input to text fields');
-  //     return;
-  //   }
-    
-  //   if(password != vertifyPass) {
-  //     alert('Vertify password failed');
-  //     return;
-  //   }
-    
-  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-  //   axios.post(apiLink+'/users', {
-  //     "name":name,
-  //     "email":email,
-  //     "password":password,
-  //     "transactions":[]
-  //   })
-  //   .then(function (response) {
-  //     console.log(response);
-  //     alert('Register Successfully');
-  //     browserHistory.push('/login');
-  //     return;
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //     alert('Register failed', error);
-  //     return;
-  //   });
-  // }
+  onChange(event, newValue) {
+    if (event.target.value == '') {
+      switch(event.target.id) {
+        case 'email': {
+          this.setState({ errorTxtEmail: 'Email is required' });
+        }
+        case 'password': {
+          this.setState({ errorTxtPass: 'Password is required' });
+        }
+        case 'vertifyPass': {
+          this.setState({ errorTxtVertifyPass: 'Vertify Password is required' });
+        }
+        return;
+      }
+    } else {
+      this.setState ({ 
+        errorTxtPass: '', 
+        errorTxtEmail: '',
+        errorTxtVertifyPass: ''
+      });
+    }
+  }
+  
+  handleClick(event) {
+
+    const txtEmail = document.getElementById('email');
+    const txtPassword = document.getElementById('password');
+    const txtVertifyPass = document.getElementById('vertifyPass');
+
+    if(txtEmail.value == "") {
+      this.setState({ errorTxtEmail: 'Email is required' })
+      return;
+    }
+    if(txtPassword.value == "") {
+      this.setState({ errorTxtPass: 'Password is required' })
+      return;
+    }
+    if(txtVertifyPass.value == "") {
+      this.setState({ errorTxtVertifyPass: 'Vertify Password is required' })
+      return;
+    }
+
+    if(txtPassword.value != txtVertifyPass.value) {
+      this.setState({ errorTxtVertifyPass: 'Wrong Vertify!' })
+      return;
+    }
+    var passwordHash = Utils.hash(txtPassword.value).toString('hex');
+    //send request
+    // const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+    // axios.post(apiLink+'/api/register', {
+    //   "email":txtEmail.value
+    //   "password":passwordHash
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    //   if(response.status ==  200) {
+    //     alert('Register Successfully');
+    //     browserHistory.push('/login');
+    //   } else  {
+    //     alert('Register Failed');
+    //   }
+    //   return;
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    //   alert('Register failed', error);
+    //   return;
+    // });
+
+    browserHistory.push('/login');
+    console.log(passwordHash);
+
+  }
 
   render() {
     const styles = {
@@ -90,18 +140,13 @@ class RegisterPage extends React.Component {
             <Paper style={styles.paper}>
 
               <form>
-
-                <TextField
-                  id="name"
-                  hintText="Name"
-                  floatingLabelText="Name"
-                  fullWidth={true}
-                />
                 <TextField
                   id="email"
                   hintText="Email"
                   floatingLabelText="Email"
                   fullWidth={true}
+                  errorText= {this.state.errorTxtEmail}
+                  onChange={this.onChange.bind(this)}
                 />
 
                 <TextField
@@ -110,6 +155,8 @@ class RegisterPage extends React.Component {
                   floatingLabelText="Password"
                   type = "password"
                   fullWidth={true}
+                  errorText= {this.state.errorTxtPass}
+                  onChange={this.onChange.bind(this)}
                 />
                 
                 <TextField
@@ -118,6 +165,8 @@ class RegisterPage extends React.Component {
                   floatingLabelText="Vertify Password"
                   type = "password"
                   fullWidth={true}
+                  errorText= {this.state.errorTxtVertifyPass}
+                  onChange={this.onChange.bind(this)}
                 />
 
                 <Divider/>
@@ -129,7 +178,7 @@ class RegisterPage extends React.Component {
 
                   <RaisedButton label="Submit"
                       style={styles.saveButton}
-                      // onClick={(event) => this.handleClick(event)}
+                      onClick={(event) => this.handleClick(event)}
                       primary={true}/>
                 </div>
               </form>

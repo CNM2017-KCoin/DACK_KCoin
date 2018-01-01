@@ -10,11 +10,15 @@ import AddressIco from 'material-ui/svg-icons/action/code';
 import InfoBox from '../components/dashboard/InfoBox';
 import RecentTransaction from '../components/dashboard/RecentTransaction';
 import globalStyles from '../styles';
+import Cookies from 'universal-cookie';
 import Data from '../data';
 // import {connect} from 'react-redux';
 // import * as actions from './../actions/index.js';
 
 class DashboardPage extends React.Component {
+  constructor(props) {
+    super(props)
+  }
   // loadData() {
   //   var self = this;
   //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
@@ -36,7 +40,11 @@ class DashboardPage extends React.Component {
   //   this.loadData();
   // }
   componentWillMount(){
-    if(Data.user.email == "") {
+
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    console.log(email);  
+    if(email == "") {
       browserHistory.push('/login');
     }
   }

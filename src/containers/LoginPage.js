@@ -9,54 +9,93 @@ import {grey500, white} from 'material-ui/styles/colors';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import TextField from 'material-ui/TextField';
 import ThemeDefault from '../theme-default';
+import Cookies from 'universal-cookie';
 import Data from '../data';
 
 const Utils = require('../services/utils');
 
 class LoginPage extends React.Component {
 
-  // handleClick(event){
-  //   const email = document.getElementById('email').value;
-  //   const password = document.getElementById('password').value;
-    
-  //   if(email == "" || password == "") {
-  //     alert("Fill in text box");
-  //     return;
-  //   }
+  constructor(props) {
+    super(props)
 
-  //   console.log(email);
-  //   console.log(password);
-  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-  //   axios.post(apiLink+'/users/checklogin', {
-  //     "email":email,
-  //     "password":password
-  //   })
-  //   .then(function (response) {
-  //     console.log(response);
-  //     if(response.status == 200){
-  //       alert("Login successful");
-  //       Data.user.email = email;
-  //       browserHistory.push('/dashboard');
-  //       return;
-  //     }
-  //     else{
-  //       alert("Login failed");
-  //       return;
-  //     }
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //     alert('Login failed', error);
-  //     return;
-  //   });
-  //  }
+    this.state = { 
+      errorTxtEmail: '',
+      errorTxtPass: ''
+    }
+  }
+
+  componentWillMount(){
+
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    console.log(email);  
+    if(email != "") {
+      browserHistory.push('/dashboard');
+    }
+  }
+
+  onChange(event, newValue) {
+    if (event.target.value == '') {
+      switch(event.target.id) {
+        case 'email': {
+          this.setState({ errorTxtEmail: 'Email is required' });
+        }
+        case 'password': {
+          this.setState({ errorTxtPass: 'Password is required' });
+        }
+        return;
+      }
+    } else {
+      this.setState ({ 
+        errorTxtPass: '', 
+        errorTxtEmail: ''
+      });
+    }
+  }
+
   handleClick(event) {
-    const message = "pass here";
 
-    var address = Utils.hash(message).toString('hex');
+    const txtEmail = document.getElementById('email');
+    const txtPassword = document.getElementById('password');
+
+    // if(txtEmail.value == "") {
+    //   this.setState({ errorTxtEmail: 'Email is required' })
+    //   return;
+    // }
+    // if(txtPassword.value == "") {
+    //   this.setState({ errorTxtPass: 'Password is required' })
+    //   return;
+    // }
+
+    var passwordHash = Utils.hash(txtPassword.value).toString('hex');
+    //send request
+    // const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
+    // axios.post(apiLink+'/api/login', {
+    //   "email":txtEmail.value
+    //   "password":passwordHash
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    //   if(response.status ==  200) {
+    //     alert('Login Successfully');
+    //     localStorage.setItem('email', Data.user.email);
+    //     browserHistory.push('/dashboard');
+    //   } else  {
+    //     alert('Login Failed');
+    //   }
+    //   return;
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    //   alert('Login failed', error);
+    //   return;
+    // });
     Data.user.email = "test@gmail.com";
+    const cookies = new Cookies();
+    cookies.set('email', txtEmail.value, { path: '/' });
     browserHistory.push('/dashboard');
-    console.log(address);
+    console.log(passwordHash);
 
   }
 
@@ -124,16 +163,20 @@ class LoginPage extends React.Component {
               <form>
                 <TextField
                   id="email"
-                  hintText="test@gmail.com"
+                  hintText="Email"
                   floatingLabelText="E-mail"
                   fullWidth={true}
+                  errorText= {this.state.errorTxtEmail}
+                  // onChange={this.onChange.bind(this)}
                 />
                 <TextField
                   id="password"
-                  hintText="test"
+                  hintText="Password"
                   floatingLabelText="Password"
                   fullWidth={true}
                   type="password"
+                  errorText= {this.state.errorTxtPass}
+                  // onChange={this.onChange.bind(this)}
                 />
 
                 <div>

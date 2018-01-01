@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import {grey400} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import PageBase from '../components/PageBase';
+import Cookies from 'universal-cookie';
 import Data from '../data';
 
 class AddTransactionPage extends React.Component {
@@ -43,7 +44,11 @@ class AddTransactionPage extends React.Component {
   //   });
   //  }
   componentWillMount(){
-    if(Data.user.email == "") {
+
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    console.log(email);  
+    if(email == "") {
       browserHistory.push('/login');
     }
   }

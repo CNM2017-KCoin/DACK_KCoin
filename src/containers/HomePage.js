@@ -8,6 +8,7 @@ import withWidth, {LARGE, SMALL} from 'material-ui/utils/withWidth';
 import ThemeDefault from '../theme-default';
 import HomeIco from 'material-ui/svg-icons/action/home';
 import DetailIco from 'material-ui/svg-icons/action/assessment';
+import Cookies from 'universal-cookie';
 import Data from '../data';
 
 class HomePage extends React.Component {
@@ -24,7 +25,11 @@ class HomePage extends React.Component {
   }
 
   componentWillMount(){
-    if(Data.user.email == "") {
+
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    console.log(email);  
+    if(email == "") {
       browserHistory.push('/login');
     }
   }

@@ -7,13 +7,18 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Menu from 'material-ui/svg-icons/navigation/menu';
 import {white} from 'material-ui/styles/colors';
+import Cookies from 'universal-cookie';
 import Data from '../data';
 
 class Header extends React.Component {
 
 
   handleClick(event){
-      Data.user = {};
+    Data.user = {};
+
+    
+    const cookies = new Cookies();
+    cookies.set('email', "", { path: '/' });
   }
   
   render() {
