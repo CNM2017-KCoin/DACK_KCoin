@@ -17,18 +17,36 @@ import Data from '../data';
 
 class DashboardPage extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
+
+  getExistEmail() {
+    const cookies = new Cookies();
+    return cookies.get('email');
+  }
+
   // loadData() {
   //   var self = this;
+
+    
+  //   //send request
   //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-  //   axios.get(apiLink+'/users/'+Data.user.email)
+  //   axios.post(apiLink+'/api/transactions', {
+  //     "email":this.getExistEmail()
+  //   })
   //   .then(function (response) {
-  //     console.log(response.data);
-  //     self.props.dispatch(actions.getData(response.data));
+  //     console.log(response);
+  //     if(response.status ==  200) {
+  //       // browserHistory.push('/login');
+  //     } else  {
+  //       alert('Load failed');
+  //     }
+  //     return;
   //   })
   //   .catch(function (error) {
   //     console.log(error);
+  //     alert('Load failed', error);
+  //     return;
   //   });
   // }
 
@@ -39,12 +57,9 @@ class DashboardPage extends React.Component {
   // componentDidMount() {
   //   this.loadData();
   // }
-  componentWillMount(){
 
-    const cookies = new Cookies();
-    const email = cookies.get('email');
-    console.log(email);  
-    if(email == "") {
+  componentWillMount(){
+    if(this.getExistEmail() == "") {
       browserHistory.push('/login');
     }
   }
@@ -52,7 +67,7 @@ class DashboardPage extends React.Component {
   render() {
     // const user = this.props.user;
     const user = Data.user;
-    if(user.transactions == null) {
+    if(user == null) {
       return(<div>The responsive it not here yet!</div>);
     }
     return (
@@ -65,7 +80,7 @@ class DashboardPage extends React.Component {
             <InfoBox Icon={RealMoneyIco}
                      color={pink600}
                      title="Số dư thực tế"
-                     value={user.amountWallet+''}
+                     value={user.actual_amount}
             />
           </div>
 
@@ -73,20 +88,20 @@ class DashboardPage extends React.Component {
             <InfoBox Icon={UsedMoneyIco}
                      color={purple600}
                      title="Số dư khả dụng"
-                     value={user.transactions.length+''}
+                     value={user.available_amount}
             />
           </div>
           <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
             <InfoBox Icon={AddressIco}
                      color={orange600}
                      title="Địa chỉ giao dịch"
-                     value={user.transactions.length+''}
+                     value={user.address}
             />
           </div>
         </div>
         <div className="row">
           <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
-            <RecentTransaction data={user.transactions} title="Recent transactions"/>
+            <RecentTransaction data={user.receiverTrans} title="Recent transactions"/>
           </div>
         </div>
       </div>
