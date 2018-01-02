@@ -11,6 +11,7 @@ import InfoBox from '../components/dashboard/InfoBox';
 import RecentTransaction from '../components/dashboard/RecentTransaction';
 import globalStyles from '../styles';
 import Cookies from 'universal-cookie';
+import QRCode from 'qrcode.react';
 import Data from '../data';
 // import {connect} from 'react-redux';
 // import * as actions from './../actions/index.js';
@@ -61,13 +62,14 @@ class DashboardPage extends React.Component {
     .then(function (response) {
       console.log(response);
       if(response.data.status ==  200) {
+        var res = response.data;
         self.setState({
-          address:response.data.address,
-          actual_amount: response.data.actual_amount,
-          available_amount: response.data.available_amount
+          address:res.data.address,
+          actual_amount: res.data.actual_amount,
+          available_amount: res.data.available_amount
         })
       } else  {
-        alert('Load failed:', response.data.error);
+        alert('Load failed:', res.data.error);
       }
       return;
     })
@@ -128,8 +130,11 @@ class DashboardPage extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
-            <RecentTransaction data={user.receiverTrans} title="Recent transactions"/>
+          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
+            <RecentTransaction data={user.receiverTrans} title="Giao dịch nhận tiền"/>
+          </div>
+          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15" >
+              <QRCode value={this.state.address} size={350}/>
           </div>
         </div>
       </div>
