@@ -15,8 +15,11 @@ class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
+    const cookies = new Cookies();
+    const email = cookies.get('email');
     this.state = {
-      navDrawerOpen: false
+      navDrawerOpen: false,
+      email:email
     };
     this.menus = [
         { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
@@ -25,11 +28,7 @@ class HomePage extends React.Component {
   }
 
   componentWillMount(){
-
-    const cookies = new Cookies();
-    const email = cookies.get('email');
-    console.log(email);  
-    if(email == "") {
+    if(this.state.email == "") {
       browserHistory.push('/login');
     }
   }
@@ -68,7 +67,7 @@ class HomePage extends React.Component {
 
             <LeftDrawer navDrawerOpen={navDrawerOpen}
                         menus={this.menus}
-                        username={Data.user.email}/>
+                        username={this.state.email}/>
 
             <div style={styles.container}>
               {this.props.children}
