@@ -17,7 +17,7 @@ const Utils = require('../services/utils');
 class LoginPage extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = { 
       errorTxtEmail: '',
