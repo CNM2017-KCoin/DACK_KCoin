@@ -94,6 +94,9 @@ class AddTransactionPage extends React.Component {
       this.setState({ errorTxtAmount: 'Amount is required' })
       return;
     }
+
+
+    browserHistory.push('/transactions');
   }
 
   render() {
