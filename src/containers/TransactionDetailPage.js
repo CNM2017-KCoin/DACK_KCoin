@@ -2,7 +2,7 @@ import React from 'react';
 // import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableCell, TableRowColumn, TableFooter} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, TableFooter} from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -10,17 +10,31 @@ import {pink500, grey500} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import Cookies from 'universal-cookie';
 import Data from '../data';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import Slider from 'material-ui/Slider';
+import IconButton from 'material-ui/IconButton';
+import LeftIco from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import RightIco from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import TextField from 'material-ui/TextField';
+import Pager from 'react-pager';
 import {connect} from 'react-redux';
 // import * as actions from './../actions/index.js';
 import globalStyles from '../styles';
 
 class TransactionDetailPage extends React.Component {
-  constructor() {
-      super();
-
+  constructor(props) {
+      super(props);
+      this.handleSenderPageChanged = this.handleSenderPageChanged.bind(this);
+      this.handleReceiverPageChanged = this.handleReceiverPageChanged.bind(this);
       this.state = {
-        page: 0,
-        rowsPerPage: 5,
+        showCheckboxes: false,
+        senderTotal:       5,
+        senderCurrent:     1,
+        senderVisiblePage: 1,
+        receiverTotal:       5,
+        receiverCurrent:     1,
+        receiverVisiblePage: 1,
+        isReceiverTab: true //send,receive
       };
 
         // this.updateRows = this.updateRows.bind(this);
@@ -55,21 +69,30 @@ class TransactionDetailPage extends React.Component {
     }
   }
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
+
+  handleSenderPageChanged (newPage) {
+    console.log(newPage);
+    this.setState({ 
+      senderCurrent: newPage
+    });
   };
 
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+  handleReceiverPageChanged (newPage) {
+    console.log(newPage);
+    this.setState({
+     receiverCurrent: newPage 
+   });
   };
+
+  handleTabChange = () => {
+    // console.log(this);
+    this.setState({
+      isReceiverTab: !this.state.isReceiverTab
+    });
+  };
+
 
   render() {
-    const transactions = Data.user.transactions;
-    const {rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, transactions.length - page * rowsPerPage);
-    if(transactions == null) {
-      return(<div>The responsive it not here yet!</div>);
-    }
     const styles = {
       floatingActionButton: {
         margin: 0,
@@ -82,66 +105,155 @@ class TransactionDetailPage extends React.Component {
       editButton: {
         fill: grey500
       },
-      columns: {
-        id: {
-          width: '10%'
+      headline: {
+        fontSize: 24,
+        paddingTop: 16,
+        marginBottom: 12,
+        fontWeight: 400,
+      },
+      columnsReceiverTable: {
+        address: {
+          width: '30%'
         },
-        name: {
+        hash: {
+          width: '30%'
+        },
+        index: {
+          width: '20%'
+        },
+        amount: {
+          width: '20%'
+        }
+      },
+      columnsSenderTable: {
+        address: {
           width: '40%'
         },
-        price: {
-          width: '20%'
+        amount: {
+          width: '30%'
         },
-        category: {
-          width: '20%'
-        },
-        edit: {
-          width: '10%'
+        status: {
+          width: '30%'
         }
+      },
+      pageNumber: {
+
       }
     };
+
+    var transactions = [];
+    if(this.state.isReceiverTab) {
+      transactions = Data.user.receiverTrans; 
+    } else {
+      transactions = Data.user.senderTrans;
+    }
+    if(transactions == null) {
+      return(<div>The responsive it not here yet!</div>);
+    }
     return (
       <div>
         <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+        <Tabs onChange={this.handleTabChange}>
+          <Tab label="Nhận tiền" >
+            <div>
+              <Paper style={globalStyles.paper}>
+                <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
+
+                <div>
+                  <Link to="/addTransaction" >
+                    <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
+                      <ContentAdd />
+                    </FloatingActionButton>
+                  </Link>
+
+                  <Table>
+                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
+                                  displaySelectAll={this.state.showCheckboxes}>
+                      <TableRow>
+                        <TableHeaderColumn style={styles.columnsReceiverTable.address}>Sender Address</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsReceiverTable.hash}>Referenced Output Hash</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsReceiverTable.index}>Referenced Index</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsReceiverTable.amount}>Amount</TableHeaderColumn>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                      {transactions.map(item =>
+                        <TableRow key={item._id}>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.hash}>{item.referencedOutputHash}</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.index}>{item.referencedOutputIndex}</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.amount}>{item.amount}</TableHeaderColumn>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                    
+                  </Table>
+                </div>
+
+                <div className="row">
+                  <Pager
+                    total={this.state.receiverTotal}
+                    current={this.state.receiverCurrent}
+                    visiblePages={this.state.receiverVisiblePage}
+                    titles={{ first: '<|', last: '>|' }}
+                    className="pagination-sm pull-right"
+                    onPageChanged={this.handleReceiverPageChanged}
+                  />       
+                </div>
+                <div style={globalStyles.clear}/>
+              </Paper>
+            </div>
+          </Tab>
+          <Tab label="Gửi tiền" >
+            <div>
+              <Paper style={globalStyles.paper}>
+                <h3 style={globalStyles.title}>Giao dịch gửi tiền</h3>
+
+                <div>
+                  <Link to="/addTransaction" >
+                    <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
+                      <ContentAdd />
+                    </FloatingActionButton>
+                  </Link>
+
+                  <Table fixedFooter={this.state.fixedFooter}>
+                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
+                                  displaySelectAll={this.state.showCheckboxes}>
+                      <TableRow>
+                        <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                      {transactions.map(item =>
+                        <TableRow key={item._id}>
+                        <TableHeaderColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.status}>{item.status}</TableHeaderColumn>
+                     
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                <div className="row">
+                  <Pager
+                    total={this.state.senderTotal}
+                    current={this.state.senderCurrent}
+                    visiblePages={this.state.senderVisiblePage}
+                    titles={{ first: '<|', last: '>|' }}
+                    className="pagination-sm pull-right"
+                    onPageChanged={this.handleSenderPageChanged}
+                  />       
+                </div>
+                <div style={globalStyles.clear}/>
+              </Paper>
+            </div>
+          </Tab>
+        </Tabs>
         
-        <Paper style={globalStyles.paper}>
-          <h3 style={globalStyles.title}>Chi tiết giao dịch</h3>
-
-          <div>
-            <Link to="/addTransaction" >
-              <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
-                <ContentAdd />
-              </FloatingActionButton>
-            </Link>
-
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderColumn style={styles.columns.name}>Receiver</TableHeaderColumn>
-                  <TableHeaderColumn style={styles.columns.price}>Amount</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(item =>
-                  <TableRow key={item._id}>
-                    <TableRowColumn style={styles.columns.name}>{item.emailReceiver}</TableRowColumn>
-                    <TableRowColumn style={styles.columns.price}>{item.amountTransaction}</TableRowColumn>
-               
-                  </TableRow>
-                )}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 49 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-              </TableFooter>
-            </Table>
-          </div>
-
-          <div style={globalStyles.clear}/>
-        </Paper>
       </div>
     );
   }

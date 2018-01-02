@@ -12,8 +12,8 @@ import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
 import {grey400, cyan600, white, orange200} from 'material-ui/styles/colors';
 import {typography} from 'material-ui/styles';
-import SendIco from 'material-ui/svg-icons/navigation/arrow-forward';
-import ReceiverIco from 'material-ui/svg-icons/navigation/arrow-back';
+import ReceiverIco from 'material-ui/svg-icons/navigation/arrow-forward';
+import SendIco from 'material-ui/svg-icons/navigation/arrow-back';
 
 class RecentTransaction extends React.Component {
   constructor(props) {
@@ -60,7 +60,19 @@ class RecentTransaction extends React.Component {
       />,
     ];
 
-    var handleClose = (item) => {
+    var viewDetail = (item) => {
+      var context = '';
+      if(item.sender_address != null) {
+        context = (<div>
+          Referenced output hash: {item.referencedOutputHash}
+          <br/>
+          Referenced output index: {item.referencedOutputIndex}
+        </div>);
+      } else {
+        context = (<div>
+          Status: {item.status}
+        </div>);
+      }
       return (
         <IconMenu iconButtonElement={iconButtonElement} onClick={this.handleOpen}>
           <Dialog
@@ -68,11 +80,7 @@ class RecentTransaction extends React.Component {
             actions={actions}
             modal={true}
             open={this.state.open}>
-            <div>
-              Referenced output hash: {item.emailReceiver}
-              <br/>
-              Referenced output index: {item.emailReceiver}
-            </div>
+            {context}
           </Dialog>
         </IconMenu>
       )
@@ -84,14 +92,14 @@ class RecentTransaction extends React.Component {
         <List>
           <Subheader style={styles.subheader}>{this.props.title}</Subheader>
           {this.props.data.map(item => {
-              if(item.isReceiver) {
+              if(item.sender_address == null) {
                 return(
                   <div key={item._id}>
                     <ListItem
-                      leftAvatar={<Avatar icon={<ReceiverIco />} />}
-                      primaryText={"Amount:"+ item.amountTransaction}
-                      secondaryText={"To:" + item.emailReceiver}
-                      rightIconButton={handleClose(item)}
+                      leftAvatar={<Avatar icon={<SendIco />} />}
+                      primaryText={"Amount:"+ item.amount}
+                      secondaryText={"To:" + item.receiver_address}
+                      rightIconButton={viewDetail(item)}
                       hoverColor={orange200}
                     />
                     <Divider inset={true} />
@@ -101,10 +109,10 @@ class RecentTransaction extends React.Component {
                 return(
                   <div key={item._id}>
                     <ListItem
-                      leftAvatar={<Avatar icon={<SendIco />} />}
-                      primaryText={"Amount:"+ item.amountTransaction}
-                      secondaryText={"To:" + item.emailReceiver}
-                      rightIconButton={handleClose(item)}
+                      leftAvatar={<Avatar icon={<ReceiverIco />} />}
+                      primaryText={"Amount:"+ item.amount}
+                      secondaryText={"From:" + item.sender_address}
+                      rightIconButton={viewDetail(item)}
                     />
                     <Divider inset={true} />
                   </div>

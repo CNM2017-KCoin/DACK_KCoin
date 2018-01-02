@@ -29,7 +29,6 @@ class LoginPage extends React.Component {
 
     const cookies = new Cookies();
     const email = cookies.get('email');
-    console.log(email);  
     if(email != "") {
       browserHistory.push('/dashboard');
     }
@@ -40,11 +39,12 @@ class LoginPage extends React.Component {
       switch(event.target.id) {
         case 'email': {
           this.setState({ errorTxtEmail: 'Email is required' });
+          return;
         }
         case 'password': {
           this.setState({ errorTxtPass: 'Password is required' });
+          return;
         }
-        return;
       }
     } else {
       this.setState ({ 
@@ -70,32 +70,28 @@ class LoginPage extends React.Component {
 
     var passwordHash = Utils.hash(txtPassword.value).toString('hex');
     //send request
-    // const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    // axios.post(apiLink+'/api/login', {
-    //   "email":txtEmail.value
-    //   "password":passwordHash
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    //   if(response.status ==  200) {
-    //     alert('Login Successfully');
-    //     localStorage.setItem('email', Data.user.email);
-    //     browserHistory.push('/dashboard');
-    //   } else  {
-    //     alert('Login Failed');
-    //   }
-    //   return;
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    //   alert('Login failed', error);
-    //   return;
-    // });
-    Data.user.email = "test@gmail.com";
-    const cookies = new Cookies();
-    cookies.set('email', txtEmail.value, { path: '/' });
-    browserHistory.push('/dashboard');
-    console.log(passwordHash);
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/login', {
+      "email":txtEmail.value,
+      "password":passwordHash
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status == 200) {
+        alert('Login Successfully');
+        const cookies = new Cookies();
+        cookies.set('email', txtEmail.value, { path: '/' });
+        browserHistory.push('/dashboard');
+      } else  {
+        alert('Login Failed');
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Login failed', error);
+      return;
+    });
 
   }
 
@@ -167,7 +163,7 @@ class LoginPage extends React.Component {
                   floatingLabelText="E-mail"
                   fullWidth={true}
                   errorText= {this.state.errorTxtEmail}
-                  // onChange={this.onChange.bind(this)}
+                  onChange={this.onChange.bind(this)}
                 />
                 <TextField
                   id="password"
@@ -176,7 +172,7 @@ class LoginPage extends React.Component {
                   fullWidth={true}
                   type="password"
                   errorText= {this.state.errorTxtPass}
-                  // onChange={this.onChange.bind(this)}
+                  onChange={this.onChange.bind(this)}
                 />
 
                 <div>

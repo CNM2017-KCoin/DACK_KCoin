@@ -1,5 +1,5 @@
 import React from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -30,14 +30,16 @@ class RegisterPage extends React.Component {
       switch(event.target.id) {
         case 'email': {
           this.setState({ errorTxtEmail: 'Email is required' });
+          return;
         }
         case 'password': {
           this.setState({ errorTxtPass: 'Password is required' });
+          return;
         }
         case 'vertifyPass': {
           this.setState({ errorTxtVertifyPass: 'Vertify Password is required' });
+          return;
         }
-        return;
       }
     } else {
       this.setState ({ 
@@ -47,7 +49,7 @@ class RegisterPage extends React.Component {
       });
     }
   }
-  
+
   handleClick(event) {
 
     const txtEmail = document.getElementById('email');
@@ -72,30 +74,27 @@ class RegisterPage extends React.Component {
       return;
     }
     var passwordHash = Utils.hash(txtPassword.value).toString('hex');
-    //send request
-    // const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-    // axios.post(apiLink+'/api/register', {
-    //   "email":txtEmail.value
-    //   "password":passwordHash
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    //   if(response.status ==  200) {
-    //     alert('Register Successfully');
-    //     browserHistory.push('/login');
-    //   } else  {
-    //     alert('Register Failed');
-    //   }
-    //   return;
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    //   alert('Register failed', error);
-    //   return;
-    // });
-
-    browserHistory.push('/login');
-    console.log(passwordHash);
+    // send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/register', {
+      "email":txtEmail.value,
+      "password":passwordHash
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        alert('Register Successfully');
+        browserHistory.push('/login');
+      } else  {
+        alert('Register Failed: Email was registered');
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Register failed: ', error);
+      return;
+    });
 
   }
 

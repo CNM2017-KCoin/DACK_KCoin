@@ -5,114 +5,77 @@ import Polymer from 'material-ui/svg-icons/action/polymer';
 const data = {
   //test data
   user:{
-    name: "test",
-    email: "",
-    password: "test",
-    amountWallet: 700,
-    transactions: [
+    address:"f25921e2aa64e494ff00b5ab09",
+    actual_amount: 100000,
+    available_amount: 10000,
+    receiverTrans: [
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d43b5c835d3140091ef5c"
-            },
-            isReceiver: true
+            referencedOutputHash:"ce91809664e549f740c38fc6d",
+            referencedOutputIndex: 0,
+            amount: 10000,
+            sender_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d470a9f544914005ff4bf"
-            },
-            isReceiver: false
+            referencedOutputHash:"ce91809664e549f740c38fc6d",
+            referencedOutputIndex: 1,
+            amount: 10000,
+            sender_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d47a99f544914005ff4c0"
-            },
-            isReceiver: true
+            referencedOutputHash:"ce91809664e549f740c38fc6d",
+            referencedOutputIndex: 2,
+            amount: 10000,
+            sender_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d470a9f544914005ff4bf"
-            },
-            isReceiver: false
+            referencedOutputHash:"ce91809664e549f740c38fc6d",
+            referencedOutputIndex: 3,
+            amount: 10000,
+            sender_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d47a99f544914005ff4c0"
-            },
-            isReceiver: true
+            referencedOutputHash:"ce91809664e549f740c38fc6d",
+            referencedOutputIndex: 4,
+            amount: 10000,
+            sender_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+        }
+    ],
+    senderTrans: [
+        {
+            amount: 10000,
+            status: "sucess",
+            receiver_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+ 
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d470a9f544914005ff4bf"
-            },
-            isReceiver: false
+            amount: 10000,
+            status: "waiting",
+            receiver_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+ 
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d47a99f544914005ff4c0"
-            },
-            isReceiver: true
+            amount: 10000,
+            status: "fail",
+            receiver_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+ 
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d470a9f544914005ff4bf"
-            },
-            isReceiver: false
+            amount: 10000,
+            status: "sucess",
+            receiver_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+ 
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d47a99f544914005ff4c0"
-            },
-            isReceiver: true
+            amount: 10000,
+            status: "waiting",
+            receiver_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+ 
         },
         {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d470a9f544914005ff4bf"
-            },
-            isReceiver: false
-        },
-        {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d47a99f544914005ff4c0"
-            },
-            isReceiver: true
-        },
-        {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d470a9f544914005ff4bf"
-            },
-            isReceiver: false
-        },
-        {
-            emailReceiver: "nguyenvanb@gmail.com",
-            amountTransaction: 4000,
-            _id: {
-                $oid: "5a1d47a99f544914005ff4c0"
-            },
-            isReceiver: true
+            amount: 10000,
+            status: "fail",
+            receiver_address:"a5f720c8080d81b9bd9781bf85c38c4d2"
+ 
         }
     ]
   }

@@ -13,6 +13,34 @@ import Data from '../data';
 
 class AddTransactionPage extends React.Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = { 
+      errorTxtAddress: '',
+      errorTxtAmount: ''
+    }
+  }
+
+  onChange(event, newValue) {
+    if (event.target.value == '') {
+      switch(event.target.id) {
+        case 'receiver_address': {
+          this.setState({ errorTxtAddress: 'Address is required' });
+          return;
+        }
+        case 'amount': {
+          this.setState({ errorTxtAmount: 'Amount is required' });
+          return;
+        }
+      }
+    } else {
+      this.setState ({ 
+        errorTxtAddress: '', 
+        errorTxtAmount: ''
+      });
+    }
+  }
   // handleClick(event){
   //   const email = document.getElementById('email').value;
   //   const amount = document.getElementById('amount').value;
@@ -53,6 +81,21 @@ class AddTransactionPage extends React.Component {
     }
   }
 
+  handleClick(event) {
+
+    const txtAddress = document.getElementById('receiver_address');
+    const txtAmount = document.getElementById('amount');
+
+    if(txtAddress.value == "") {
+      this.setState({ errorTxtAddress: 'Address is required' })
+      return;
+    }
+    if(txtAmount.value == "") {
+      this.setState({ errorTxtAmount: 'Amount is required' })
+      return;
+    }
+  }
+
   render() {
     const styles = {
       toggleDiv: {
@@ -79,10 +122,12 @@ class AddTransactionPage extends React.Component {
         <form>
 
           <TextField
-            id="email"
-            hintText="Email receiver"
-            floatingLabelText="Email receiver"
+            id="receiver_address"
+            hintText="Receiver Address"
+            floatingLabelText="Receiver Address"
             fullWidth={true}
+            errorText= {this.state.errorTxtAddress}
+            onChange={this.onChange.bind(this)}
           />
 
           <TextField
@@ -90,6 +135,9 @@ class AddTransactionPage extends React.Component {
             hintText="Amount"
             floatingLabelText="Amount"
             fullWidth={true}
+            type="number"
+            errorText= {this.state.errorTxtAmount}
+            onChange={this.onChange.bind(this)}
           />
 
           <Divider/>
@@ -99,9 +147,9 @@ class AddTransactionPage extends React.Component {
               <RaisedButton label="Cancel"/>
             </Link>
 
-            <RaisedButton label="Save"
+            <RaisedButton label="Submit"
               style={styles.saveButton}
-              // onClick={(event) => this.handleClick(event)}
+              onClick={(event) => this.handleClick(event)}
               primary={true}/>
           </div>
         </form>
