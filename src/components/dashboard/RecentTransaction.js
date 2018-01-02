@@ -43,15 +43,6 @@ class RecentTransaction extends React.Component {
       }
     };
 
-    const iconButtonElement = (
-      <IconButton
-        touch={true}
-        tooltipPosition="bottom-left"
-      >
-        <MoreVertIcon color={grey400} />
-      </IconButton>
-    );
-
     const actions = [
       <FlatButton
         label="OK"
@@ -64,17 +55,22 @@ class RecentTransaction extends React.Component {
       var context = '';
       if(item.sender_address != null) {
         context = (<div>
+          Sender Address: {item.sender_address}
+          <br/>
+          Amount: {item.amount}
+          <br/>
           Referenced output hash: {item.referencedOutputHash}
           <br/>
           Referenced output index: {item.referencedOutputIndex}
         </div>);
-      } else {
-        context = (<div>
-          Status: {item.status}
-        </div>);
-      }
+      } 
+
       return (
-        <IconMenu iconButtonElement={iconButtonElement} onClick={this.handleOpen}>
+        <IconButton
+          touch={true}
+          tooltipPosition="bottom-left" 
+          onClick={this.handleOpen}>
+          <MoreVertIcon color={grey400} />
           <Dialog
             title="Transaction Detail"
             actions={actions}
@@ -82,7 +78,7 @@ class RecentTransaction extends React.Component {
             open={this.state.open}>
             {context}
           </Dialog>
-        </IconMenu>
+        </IconButton>
       )
     };
 
