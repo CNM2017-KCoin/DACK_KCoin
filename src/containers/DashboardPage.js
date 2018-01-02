@@ -18,6 +18,12 @@ import Data from '../data';
 class DashboardPage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { 
+      address:"",
+      actual_amount: 0,
+      available_amount: 0
+    }
   }
 
   getExistEmail() {
@@ -25,38 +31,60 @@ class DashboardPage extends React.Component {
     return cookies.get('email');
   }
 
-  // loadData() {
-  //   var self = this;
+  loadData() {
+    var self = this;
 
     
-  //   //send request
-  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-  //   axios.post(apiLink+'/api/transactions', {
-  //     "email":this.getExistEmail()
-  //   })
-  //   .then(function (response) {
-  //     console.log(response);
-  //     if(response.status ==  200) {
-  //       // browserHistory.push('/login');
-  //     } else  {
-  //       alert('Load failed');
-  //     }
-  //     return;
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //     alert('Load failed', error);
-  //     return;
-  //   });
-  // }
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    // axios.post(apiLink+'/api/transactions', {
+    //   "email":this.getExistEmail()
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    //   if(response.status ==  200) {
+    //     // browserHistory.push('/login');
+    //   } else  {
+    //     alert('Load failed');
+    //   }
+    //   return;
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    //   alert('Load failed', error);
+    //   return;
+    // });
 
-  // componentWillReceiveProps() {
-  //   this.loadData();
-  // }
+    axios.post(apiLink+'/api/user-info', {
+      "email":this.getExistEmail()
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        self.setState({
+          address:response.data.address,
+          actual_amount: response.data.actual_amount,
+          available_amount: response.data.available_amount
+        })
+      } else  {
+        alert('Load failed:', response.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load failed', error);
+      return;
+    });
+  }
 
-  // componentDidMount() {
-  //   this.loadData();
-  // }
+  componentWillReceiveProps() {
+    this.loadData();
+  }
+
+  componentDidMount() {
+    this.loadData();
+  }
 
   componentWillMount(){
     if(this.getExistEmail() == "") {
@@ -80,7 +108,7 @@ class DashboardPage extends React.Component {
             <InfoBox Icon={RealMoneyIco}
                      color={pink600}
                      title="Số dư thực tế"
-                     value={user.actual_amount}
+                     value={this.state.actual_amount}
             />
           </div>
 
@@ -88,14 +116,14 @@ class DashboardPage extends React.Component {
             <InfoBox Icon={UsedMoneyIco}
                      color={purple600}
                      title="Số dư khả dụng"
-                     value={user.available_amount}
+                     value={this.state.available_amount}
             />
           </div>
           <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
             <InfoBox Icon={AddressIco}
                      color={orange600}
                      title="Địa chỉ giao dịch"
-                     value={user.address}
+                     value={this.state.address}
             />
           </div>
         </div>
