@@ -162,6 +162,7 @@ class LoginPage extends React.Component {
                   hintText="Email"
                   floatingLabelText="E-mail"
                   fullWidth={true}
+                  type="email"
                   errorText= {this.state.errorTxtEmail}
                   onChange={this.onChange.bind(this)}
                 />

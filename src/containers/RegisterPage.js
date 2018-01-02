@@ -144,6 +144,7 @@ class RegisterPage extends React.Component {
                   hintText="Email"
                   floatingLabelText="Email"
                   fullWidth={true}
+                  type="email"
                   errorText= {this.state.errorTxtEmail}
                   onChange={this.onChange.bind(this)}
                 />
