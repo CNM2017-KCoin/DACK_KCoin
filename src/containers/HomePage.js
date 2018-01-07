@@ -24,12 +24,12 @@ class HomePage extends React.Component {
       role:role
     };
 
-    if(role == "User") {
+    if(role == "user") {
       this.menus = [
           { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
           { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
         ];
-    } else if(role == "Admin"){
+    } else if(role == "admin"){
       this.menus = [
           { text: 'Danh sách người dùng', icon: <HomeIco/>, link: '/all_users' },
           { text: 'Danh sách giao dịch', icon: <DetailIco/>, link: '/all_transactions' }
