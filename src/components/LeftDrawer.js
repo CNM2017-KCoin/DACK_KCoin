@@ -5,7 +5,6 @@ import {white, blue600} from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
 import {Link} from 'react-router';
 import Avatar from 'material-ui/Avatar';
-import Data from '../data';
 
 const LeftDrawer = (props) => {
   let { navDrawerOpen } = props;
@@ -52,7 +51,7 @@ const LeftDrawer = (props) => {
       docked={true}
       open={navDrawerOpen}>
         <div style={styles.logo}>
-          {Data.user.role}
+          {props.role}
         </div>
         <div style={styles.avatar.div}>
           <Avatar src="http://www.material-ui.com/images/uxceo-128.jpg"
