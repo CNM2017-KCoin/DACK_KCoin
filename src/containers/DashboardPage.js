@@ -40,7 +40,7 @@ class DashboardPage extends React.Component {
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     // axios.post(apiLink+'/api/transactions', {
-    //   "email":self.email
+    //   "email":self.state.email
     // })
     // .then(function (response) {
     //   console.log(response);
@@ -58,7 +58,7 @@ class DashboardPage extends React.Component {
     // });
 
     axios.post(apiLink+'/api/user-info', {
-      "email":self.email
+      "email":self.state.email
     })
     .then(function (response) {
       console.log(response);
@@ -96,7 +96,7 @@ class DashboardPage extends React.Component {
     if(this.state.email == "") {
       browserHistory.push('/login');
     }
-    else if(role != "User") {
+    else if(role != "user") {
       browserHistory.push('/*');
     }
   }
