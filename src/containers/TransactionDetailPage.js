@@ -68,7 +68,7 @@ class TransactionDetailPage extends React.Component {
     if(this.state.email == "") {
       browserHistory.push('/login');
     }
-    else if(role != "User") {
+    else if(role != "user") {
       browserHistory.push('/*');
     }
   }
@@ -201,11 +201,11 @@ class TransactionDetailPage extends React.Component {
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
                       {transactions.map(item =>
                         <TableRow key={item._id}>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>12/12/2017 12:12:12</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.hash}>{item.referencedOutputHash}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.index}>{item.referencedOutputIndex}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.amount}>{item.amount}</TableHeaderColumn>
+                        <TableRowColumn style={styles.columnsReceiverTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
+                          <TableRowColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsReceiverTable.hash}>{item.referencedOutputHash}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsReceiverTable.index}>{item.referencedOutputIndex}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsReceiverTable.amount}>{item.amount}</TableRowColumn>
                         </TableRow>
                       )}
                     </TableBody>
@@ -243,10 +243,10 @@ class TransactionDetailPage extends React.Component {
                     <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
-                        <TableRowColumn style={styles.columnsSenderTable.timestamp}>Time</TableRowColumn>
-                        <TableRowColumn style={styles.columnsSenderTable.address}>Receiver Address</TableRowColumn>
-                        <TableRowColumn style={styles.columnsSenderTable.amount}>Amount</TableRowColumn>
-                        <TableRowColumn style={styles.columnsSenderTable.status}>status</TableRowColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>Time</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
                       </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
@@ -261,7 +261,7 @@ class TransactionDetailPage extends React.Component {
                             status_style = styles.columnsSenderTable.status_fail;
                             break;
                           }
-                          case 'sucess': {
+                          case 'success': {
                             status_style = styles.columnsSenderTable.status_success;
                             break;
                           }
