@@ -55,6 +55,8 @@ class RecentTransaction extends React.Component {
       var context = '';
       if(item.sender_address != null) {
         context = (<div>
+          Time: {item.timestamp}
+          <br/>
           Sender Address: {item.sender_address}
           <br/>
           Amount: {item.amount}
