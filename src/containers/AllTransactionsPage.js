@@ -170,15 +170,15 @@ class TransactionDetailPage extends React.Component {
                         var status_style = {};
                         switch(item.status) {
                           case 'waiting': {
-                            status_style = styles.columnsSenderTable.status_waiting;
+                            status_style = styles.columnsTable.status_waiting;
                             break;
                           }
                           case 'fail': {
-                            status_style = styles.columnsSenderTable.status_fail;
+                            status_style = styles.columnsTable.status_fail;
                             break;
                           }
                           case 'success': {
-                            status_style = styles.columnsSenderTable.status_success;
+                            status_style = styles.columnsTable.status_success;
                             break;
                           }
                         }
