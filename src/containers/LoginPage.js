@@ -29,8 +29,13 @@ class LoginPage extends React.Component {
 
     const cookies = new Cookies();
     const email = cookies.get('email');
+    const role = cookies.get('role');
     if(email != "") {
-      browserHistory.push('/dashboard');
+      if(role == "admin") {
+        browserHistory.push('/all_users');
+      } else if(role == "user"){
+        browserHistory.push('/dashboard');
+      }
     }
   }
 
@@ -78,19 +83,19 @@ class LoginPage extends React.Component {
     .then(function (response) {
       console.log(response);
       if(response.data.status == 200) {
-        alert('Login Successfully');
-        var role = "Admin";//Admin/User
+        alert('Đăng nhập thành công!');
+        let role = response.data.data.role.toLowerCase();//admin/user
         const cookies = new Cookies();
         cookies.set('email', txtEmail.value, { path: '/' });
         // cookies.set('role', response.data.data.role, { path: '/' });
         cookies.set('role', role, { path: '/' });
-        if(role == "Admin") {
+        if(role == "admin") {
           browserHistory.push('/all_users');
-        } else if(role == "User"){
+        } else if(role == "user"){
           browserHistory.push('/dashboard');
         }
       } else  {
-        alert('Login Failed');
+        alert('Đăng nhập thất bại!', response.data.error);
       }
       return;
     })
