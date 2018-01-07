@@ -112,32 +112,49 @@ class TransactionDetailPage extends React.Component {
         fontWeight: 400,
       },
       columnsReceiverTable: {
+        timestamp: {
+          width: '20%'
+        },
         address: {
-          width: '30%'
+          width: '25%'
         },
         hash: {
-          width: '30%'
+          width: '25%'
         },
         index: {
-          width: '20%'
+          width: '15%'
         },
         amount: {
-          width: '20%'
+          width: '15%'
         }
       },
       columnsSenderTable: {
+        timestamp: {
+          width: '20%'
+        },
         address: {
-          width: '40%'
+          width: '30%'
         },
         amount: {
-          width: '30%'
+          width: '25%'
+        },
+        status_success: {
+          color: 'green',
+          fontWeight: 'bold',
+          width: '25%'
+        },
+        status_fail: {
+          color: 'red',
+          fontWeight: 'bold',
+          width: '25%'
+        },
+        status_waiting: {
+          fontWeight: 'bold',
+          width: '25%'
         },
         status: {
-          width: '30%'
+          width: '25%'
         }
-      },
-      pageNumber: {
-
       }
     };
 
@@ -170,6 +187,7 @@ class TransactionDetailPage extends React.Component {
                     <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
+                        <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>Time</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsReceiverTable.address}>Sender Address</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsReceiverTable.hash}>Referenced Output Hash</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsReceiverTable.index}>Referenced Index</TableHeaderColumn>
@@ -179,6 +197,7 @@ class TransactionDetailPage extends React.Component {
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
                       {transactions.map(item =>
                         <TableRow key={item._id}>
+                        <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>12/12/2017 12:12:12</TableHeaderColumn>
                           <TableHeaderColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableHeaderColumn>
                           <TableHeaderColumn style={styles.columnsReceiverTable.hash}>{item.referencedOutputHash}</TableHeaderColumn>
                           <TableHeaderColumn style={styles.columnsReceiverTable.index}>{item.referencedOutputIndex}</TableHeaderColumn>
@@ -220,19 +239,38 @@ class TransactionDetailPage extends React.Component {
                     <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
+                        <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>Time</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
                       </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                      {transactions.map(item =>
-                        <TableRow key={item._id}>
-                        <TableHeaderColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.status}>{item.status}</TableHeaderColumn>
-                     
-                        </TableRow>
+                      {transactions.map(item => {
+                        var status_style = {};
+                        switch(item.status) {
+                          case 'waiting': {
+                            status_style = styles.columnsSenderTable.status_waiting;
+                            break;
+                          }
+                          case 'fail': {
+                            status_style = styles.columnsSenderTable.status_fail;
+                            break;
+                          }
+                          case 'sucess': {
+                            status_style = styles.columnsSenderTable.status_success;
+                            break;
+                          }
+                        }
+                        // console.log(status_style);
+                        return(
+                          <TableRow key={item._id}>
+                          <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>12/12/2017 12:12:12</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableHeaderColumn>
+                          <TableHeaderColumn style={status_style}>{item.status}</TableHeaderColumn>                
+                          </TableRow>                         
+                        )}
                       )}
                     </TableBody>
                   </Table>
