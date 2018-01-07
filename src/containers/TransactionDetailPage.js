@@ -243,10 +243,10 @@ class TransactionDetailPage extends React.Component {
                     <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
-                        <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
+                        <TableRowColumn style={styles.columnsSenderTable.timestamp}>Time</TableRowColumn>
+                        <TableRowColumn style={styles.columnsSenderTable.address}>Receiver Address</TableRowColumn>
+                        <TableRowColumn style={styles.columnsSenderTable.amount}>Amount</TableRowColumn>
+                        <TableRowColumn style={styles.columnsSenderTable.status}>status</TableRowColumn>
                       </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
@@ -269,10 +269,10 @@ class TransactionDetailPage extends React.Component {
                         // console.log(status_style);
                         return(
                           <TableRow key={item._id}>
-                          <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>12/12/2017 12:12:12</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableHeaderColumn>
-                          <TableHeaderColumn style={status_style}>{item.status}</TableHeaderColumn>                
+                          <TableRowColumn style={styles.columnsSenderTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
+                          <TableRowColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableRowColumn>
+                          <TableRowColumn style={status_style}>{item.status}</TableRowColumn>                
                           </TableRow>                         
                         )}
                       )}

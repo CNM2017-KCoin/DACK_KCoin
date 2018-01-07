@@ -104,19 +104,22 @@ class TransactionDetailPage extends React.Component {
       },
       columnsTable: {
         timestamp: {
-          width: '10%'
+          width: '13%'
         },
         senderAddress: {
-          width: '20%'
+          width: '20%',
+          fontSize: 11
         },
         receiverAddress: {
-          width: '20%'
+          width: '20%',
+          fontSize: 11
         },
         amount: {
           width: '10%'
         },
         hash: {
-          width: '20%'
+          width: '17%',
+          fontSize: 11
         },
         index: {
           width: '10%'
@@ -157,8 +160,8 @@ class TransactionDetailPage extends React.Component {
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
                         <TableHeaderColumn style={styles.columnsTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.hash}>Referenced Output Hash</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.index}>Referenced Index</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.hash}>Ref Output Hash</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.index}>Ref Index</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsTable.amount}>Amount</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsTable.address}>Sender Address</TableHeaderColumn>
                         <TableHeaderColumn style={styles.columnsTable.address}>Receiver Address</TableHeaderColumn>
@@ -185,13 +188,13 @@ class TransactionDetailPage extends React.Component {
                         // console.log(status_style);
                         return(
                           <TableRow key={item._id}>
-                            <TableHeaderColumn style={styles.columnsTable.timestamp}>{item.timestamp}</TableHeaderColumn>
-                            <TableHeaderColumn style={styles.columnsTable.hash}>{item.referencedOutputHash}</TableHeaderColumn>
-                            <TableHeaderColumn style={styles.columnsTable.index}>{item.referencedOutputIndex}</TableHeaderColumn>
-                            <TableHeaderColumn style={styles.columnsTable.amount}>{item.amount}</TableHeaderColumn>
-                            <TableHeaderColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableHeaderColumn>
-                            <TableHeaderColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableHeaderColumn>
-                            <TableHeaderColumn style={status_style}>{item.status}</TableHeaderColumn>
+                            <TableRowColumn style={styles.columnsTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.hash}>{item.referencedOutputHash}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.index}>{item.referencedOutputIndex}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.amount}>{item.amount}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableRowColumn>
+                            <TableRowColumn style={status_style}>{item.status}</TableRowColumn>
                           </TableRow>                       
                         )}
                       )}

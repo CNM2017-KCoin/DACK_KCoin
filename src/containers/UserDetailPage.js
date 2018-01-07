@@ -182,10 +182,10 @@ class DashboardPage extends React.Component {
                   <TableBody displayRowCheckbox={this.state.showCheckboxes}>
                     {admin.users.map(item => 
                         <TableRow key={item._id}>
-                          <TableHeaderColumn style={styles.columnsTable.email}>{item.email}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsTable.address}>{item.address}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsTable.actual_amount}>{item.actual_amount}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsTable.available_amount}>{item.available_amount}</TableHeaderColumn>
+                          <TableRowColumn style={styles.columnsTable.email}>{item.email}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsTable.address}>{item.address}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsTable.actual_amount}>{item.actual_amount}</TableRowColumn>
+                          <TableRowColumn style={styles.columnsTable.available_amount}>{item.available_amount}</TableRowColumn>
                         </TableRow>
                     )}
                   </TableBody>
