@@ -79,9 +79,16 @@ class LoginPage extends React.Component {
       console.log(response);
       if(response.data.status == 200) {
         alert('Login Successfully');
+        var role = "Admin";//Admin/User
         const cookies = new Cookies();
         cookies.set('email', txtEmail.value, { path: '/' });
-        browserHistory.push('/dashboard');
+        // cookies.set('role', response.data.data.role, { path: '/' });
+        cookies.set('role', role, { path: '/' });
+        if(role == "Admin") {
+          browserHistory.push('/all_users');
+        } else if(role == "User"){
+          browserHistory.push('/dashboard');
+        }
       } else  {
         alert('Login Failed');
       }
