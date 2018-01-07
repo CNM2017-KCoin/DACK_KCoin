@@ -7,6 +7,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {grey400} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import PageBase from '../components/PageBase';
 import Cookies from 'universal-cookie';
 import Data from '../data';
@@ -18,9 +20,32 @@ class AddTransactionPage extends React.Component {
 
     this.state = { 
       errorTxtAddress: '',
-      errorTxtAmount: ''
+      errorTxtAmount: '',
+      errorTxtVertifyPass: '',
+      errorTxtCode: '',
+      open:false
     }
   }
+
+  handleOpenVertify = () => {
+    this.setState({open: true});
+  };
+
+  postTransaction = (event) => {
+    const txtVertifyPass = document.getElementById('vertify_pass');
+    const txtCode = document.getElementById('code');
+
+    if(txtVertifyPass.value == "") {
+      this.setState({ errorTxtVertifyPass: 'Vertify Password is required' })
+      return;
+    }
+    if(txtCode.value == "") {
+      this.setState({ errorTxtCode: 'Code is required' })
+      return;
+    }
+    this.setState({open: false});
+    browserHistory.push('/transactions');
+  };
 
   onChange(event, newValue) {
     if (event.target.value == '') {
@@ -38,6 +63,26 @@ class AddTransactionPage extends React.Component {
       this.setState ({ 
         errorTxtAddress: '', 
         errorTxtAmount: ''
+      });
+    }
+  }
+
+  onDialogChange(event, newValue) {
+    if (event.target.value == '') {
+      switch(event.target.id) {
+        case 'vertify_pass': {
+          this.setState({ errorTxtVertifyPass: 'Vertify Password is required' });
+          return;
+        }
+        case 'code': {
+          this.setState({ errorTxtCode: 'Code is required' });
+          return;
+        }
+      }
+    } else {
+      this.setState ({ 
+        errorTxtVertifyPass: '', 
+        errorTxtCode: ''
       });
     }
   }
@@ -93,13 +138,12 @@ class AddTransactionPage extends React.Component {
       this.setState({ errorTxtAddress: 'Address is required' })
       return;
     }
-    if(txtAmount.value == "") {
-      this.setState({ errorTxtAmount: 'Amount is required' })
+    if(txtAmount.value == "" || parseInt(txtAmount.value) <= 0) {
+      this.setState({ errorTxtAmount: 'Amount is required and larger than 0' })
       return;
     }
 
-
-    browserHistory.push('/transactions');
+    this.handleOpenVertify();
   }
 
   render() {
@@ -122,9 +166,45 @@ class AddTransactionPage extends React.Component {
       }
     };
 
+    var context =  (
+      <form>
+        <TextField
+          id="vertify_pass"
+          hintText="Vertify Password"
+          floatingLabelText="Vertify Password"
+          fullWidth={true}
+          type="password"
+          errorText= {this.state.errorTxtVertifyPass}
+          onChange={this.onDialogChange.bind(this)}
+        />
+
+        <TextField
+          id="code"
+          hintText="Code"
+          floatingLabelText="Code"
+          fullWidth={true}
+          errorText= {this.state.errorTxtCode}
+          onChange={this.onDialogChange.bind(this)}
+        />
+
+        <Divider/>
+
+        <div style={styles.buttons}>
+          <Link to="/transactions">
+            <RaisedButton label="Thoát"/>
+          </Link>
+
+          <RaisedButton label="Gửi"
+            style={styles.saveButton}
+            onClick={(event) => this.postTransaction(event)}
+            primary={true}/>
+        </div>
+      </form>
+    );
+
     return (
-      <PageBase title="Add Transaction"
-                navigation="Application / Add Transaction">
+      <PageBase title="Khởi tạo giao dịch"
+                navigation="Ví KCoin / Khởi tạo giao dịch">
         <form>
 
           <TextField
@@ -149,16 +229,22 @@ class AddTransactionPage extends React.Component {
           <Divider/>
 
           <div style={styles.buttons}>
-            <Link to="/">
-              <RaisedButton label="Cancel"/>
+            <Link to="/transactions">
+              <RaisedButton label="Thoát"/>
             </Link>
 
-            <RaisedButton label="Submit"
+            <RaisedButton label="Xác nhận"
               style={styles.saveButton}
               onClick={(event) => this.handleClick(event)}
               primary={true}/>
           </div>
         </form>
+        <Dialog
+            title="Xác nhận giao dịch"
+            modal={true}
+            open={this.state.open}>
+            {context}
+          </Dialog>
       </PageBase>
     );
   };
