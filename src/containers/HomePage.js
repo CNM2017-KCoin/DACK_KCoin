@@ -17,25 +17,30 @@ class HomePage extends React.Component {
     super(props);
     const cookies = new Cookies();
     const email = cookies.get('email');
+    const role = cookies.get('role');
     this.state = {
       navDrawerOpen: false,
-      email:email
+      email:email,
+      role:role
     };
-    if(Data.user.role == "User") {
+
+    if(role == "User") {
       this.menus = [
           { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
           { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
         ];
-    } else if(Data.user.role == "Admin"){
+    } else if(role == "Admin"){
       this.menus = [
-          { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
-          { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
+          { text: 'Danh sách người dùng', icon: <HomeIco/>, link: '/all_users' },
+          { text: 'Danh sách giao dịch', icon: <DetailIco/>, link: '/all_transactions' }
         ];
+    } else {
+      this.menus = [];
     }
   }
 
   componentWillMount(){
-    if(this.state.email == "") {
+    if(this.state.email == "" || this.state.role == "") {
       browserHistory.push('/login');
     }
   }
@@ -74,7 +79,8 @@ class HomePage extends React.Component {
 
             <LeftDrawer navDrawerOpen={navDrawerOpen}
                         menus={this.menus}
-                        username={this.state.email}/>
+                        username={this.state.email}
+                        role={this.state.role}/>
 
             <div style={styles.container}>
               {this.props.children}
