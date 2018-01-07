@@ -39,6 +39,9 @@ class Header extends React.Component {
         <div>
             <AppBar
               style={{...styles, ...style.appBar}}
+              title={
+                <div>KCoin Wallet</div>
+              }
               iconElementLeft={
                   <IconButton style={style.menuButton} onClick={handleChangeRequestNavDrawer}>
                     <Menu color={white} />
