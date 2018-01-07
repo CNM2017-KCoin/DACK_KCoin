@@ -2,7 +2,7 @@ import React from 'react';
 // import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, TableFooter} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -63,9 +63,13 @@ class TransactionDetailPage extends React.Component {
 
     const cookies = new Cookies();
     const email = cookies.get('email');
+    const role = cookies.get('role');
     console.log(email);  
-    if(email == "") {
+    if(this.state.email == "") {
       browserHistory.push('/login');
+    }
+    else if(role != "User") {
+      browserHistory.push('/*');
     }
   }
 
@@ -235,7 +239,7 @@ class TransactionDetailPage extends React.Component {
                     </FloatingActionButton>
                   </Link>
 
-                  <Table fixedFooter={this.state.fixedFooter}>
+                  <Table>
                     <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
