@@ -27,9 +27,10 @@ class DashboardPage extends React.Component {
       total_users:0,
       total_actual_amount: 0,
       total_available_amount: 0,
+      users: [],
       showCheckboxes: false,
-      total:       5,
-      current:     1,
+      total:       0,
+      current:     0,
       visiblePages: 1
     }
   }
@@ -37,66 +38,81 @@ class DashboardPage extends React.Component {
 
   handlePageChanged (newPage) {
     console.log(newPage);
+    this.loadUsersData(newPage);
     this.setState({ 
       current: newPage
     });
   };
 
-  // loadData() {
-  //   var self = this;
-  //
-  //
-  //   //send request
-  //   const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
-  //   // axios.post(apiLink+'/api/transactions', {
-  //   //   "email":this.getExistEmail()
-  //   // })
-  //   // .then(function (response) {
-  //   //   console.log(response);
-  //   //   if(response.status ==  200) {
-  //   //     // browserHistory.push('/login');
-  //   //   } else  {
-  //   //     alert('Load failed');
-  //   //   }
-  //   //   return;
-  //   // })
-  //   // .catch(function (error) {
-  //   //   console.log(error);
-  //   //   alert('Load failed', error);
-  //   //   return;
-  //   // });
-  //
-  //   axios.post(apiLink+'/api/user-info', {
-  //     "email":this.getExistEmail()
-  //   })
-  //   .then(function (response) {
-  //     console.log(response);
-  //     if(response.data.status ==  200) {
-  //       var res = response.data;
-  //       self.setState({
-  //         address:res.data.address,
-  //         actual_amount: res.data.actual_amount,
-  //         available_amount: res.data.available_amount
-  //       })
-  //     } else  {
-  //       alert('Load failed:', res.data.error);
-  //     }
-  //     return;
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //     alert('Load failed', error);
-  //     return;
-  //   });
-  // }
-  //
-  // componentWillReceiveProps() {
-  //   this.loadData();
-  // }
-  //
-  // componentDidMount() {
-  //   this.loadData();
-  // }
+  loadUsersData(offset) {
+    var self = this;
+  
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/users', {
+      "offset":offset
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        self.setState({
+          users: res.data.users
+        })
+      } else  {
+        alert('Load users failed:', res.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load users failed', error);
+      return;
+    });
+  }
+
+  loadTotalData() {
+    var self = this;
+  
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(
+      apiLink+'/api/user-total-info'
+    )
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        self.setState({
+          total_users:res.data.total_users,
+          total_actual_amount: res.data.total_actual_amount,
+          total_available_amount: res.data.total_available_amount,
+          total: Math.ceil(res.data.total_users/10)
+        });
+
+      } else  {
+        alert('Load info failed');
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load info failed', error);
+      return;
+    });
+
+  
+  }
+  
+  componentWillReceiveProps() {
+    this.loadTotalData();
+    this.loadUsersData(this.state.current);
+  }
+  
+  componentDidMount() {
+    this.loadTotalData();
+    this.loadUsersData(this.state.current);
+  }
 
   componentWillMount(){
 
@@ -106,7 +122,7 @@ class DashboardPage extends React.Component {
     if(email == "") {
       browserHistory.push('/login');
     }
-    else if(role != "Admin") {
+    else if(role != "admin") {
       browserHistory.push('/*');
     }
   }
@@ -129,9 +145,9 @@ class DashboardPage extends React.Component {
       }
     }
     // const user = this.props.user;
-    const admin = Data.admin;
-    const users = admin.users;
-    if(admin == null) {
+    const admin = this.state;
+    const users = this.state.users;
+    if(users == null) {
       return(<div>The responsive it not here yet!</div>);
     }
     return (
