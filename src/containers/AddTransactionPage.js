@@ -75,9 +75,12 @@ class AddTransactionPage extends React.Component {
 
     const cookies = new Cookies();
     const email = cookies.get('email');
-    console.log(email);  
+    const role = cookies.get('role');
     if(email == "") {
       browserHistory.push('/login');
+    }
+    else if(role != "User") {
+      browserHistory.push('/*');
     }
   }
 
