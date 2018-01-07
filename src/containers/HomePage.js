@@ -21,10 +21,17 @@ class HomePage extends React.Component {
       navDrawerOpen: false,
       email:email
     };
-    this.menus = [
-        { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
-        { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
-      ];
+    if(Data.user.role == "User") {
+      this.menus = [
+          { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
+          { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
+        ];
+    } else if(Data.user.role == "Admin"){
+      this.menus = [
+          { text: 'Trang chủ', icon: <HomeIco/>, link: '/dashboard' },
+          { text: 'Chi tiết giao dịch', icon: <DetailIco/>, link: '/transactions' }
+        ];
+    }
   }
 
   componentWillMount(){
