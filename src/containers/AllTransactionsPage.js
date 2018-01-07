@@ -24,17 +24,12 @@ import globalStyles from '../styles';
 class TransactionDetailPage extends React.Component {
   constructor(props) {
       super(props);
-      this.handleSenderPageChanged = this.handleSenderPageChanged.bind(this);
-      this.handleReceiverPageChanged = this.handleReceiverPageChanged.bind(this);
+      this.handlePageChanged = this.handlePageChanged.bind(this);
       this.state = {
         showCheckboxes: false,
-        senderTotal:       5,
-        senderCurrent:     1,
-        senderVisiblePage: 1,
-        receiverTotal:       5,
-        receiverCurrent:     1,
-        receiverVisiblePage: 1,
-        isReceiverTab: true //send,receive
+        total:       5,
+        current:     1,
+        visiblePage: 1
       };
 
         // this.updateRows = this.updateRows.bind(this);
@@ -73,18 +68,11 @@ class TransactionDetailPage extends React.Component {
   }
 
 
-  handleSenderPageChanged (newPage) {
+  handlePageChanged (newPage) {
     console.log(newPage);
     this.setState({ 
-      senderCurrent: newPage
+      current: newPage
     });
-  };
-
-  handleReceiverPageChanged (newPage) {
-    console.log(newPage);
-    this.setState({
-     receiverCurrent: newPage 
-   });
   };
 
   handleTabChange = () => {
@@ -114,68 +102,53 @@ class TransactionDetailPage extends React.Component {
         marginBottom: 12,
         fontWeight: 400,
       },
-      columnsReceiverTable: {
+      columnsTable: {
         timestamp: {
+          width: '10%'
+        },
+        senderAddress: {
           width: '20%'
         },
-        address: {
-          width: '25%'
+        receiverAddress: {
+          width: '20%'
+        },
+        amount: {
+          width: '10%'
         },
         hash: {
-          width: '25%'
-        },
-        index: {
-          width: '15%'
-        },
-        amount: {
-          width: '15%'
-        }
-      },
-      columnsSenderTable: {
-        timestamp: {
           width: '20%'
         },
-        address: {
-          width: '30%'
-        },
-        amount: {
-          width: '25%'
+        index: {
+          width: '10%'
         },
         status_success: {
           color: 'green',
           fontWeight: 'bold',
-          width: '25%'
+          width: '10%'
         },
         status_fail: {
           color: 'red',
           fontWeight: 'bold',
-          width: '25%'
+          width: '10%'
         },
         status_waiting: {
           fontWeight: 'bold',
-          width: '25%'
+          width: '10%'
         },
         status: {
-          width: '25%'
+          width: '10%'
         }
       }
     };
 
-    var transactions = [];
-    if(this.state.isReceiverTab) {
-      transactions = Data.admin.receiverTrans; 
-    } else {
-      transactions = Data.admin.senderTrans;
-    }
+    var transactions = Data.admin.transactions;
     if(transactions == null) {
       return(<div>The responsive it not here yet!</div>);
     }
     return (
       <div>
         <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
-        <Tabs onChange={this.handleTabChange}>
-          <Tab label="Nhận tiền" >
-            <div>
+        <div>
               <Paper style={globalStyles.paper}>
                 <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
                 <div>
@@ -183,59 +156,17 @@ class TransactionDetailPage extends React.Component {
                     <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                   displaySelectAll={this.state.showCheckboxes}>
                       <TableRow>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.address}>Sender Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.hash}>Referenced Output Hash</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.index}>Referenced Index</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.amount}>Amount</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.timestamp}>Time</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.hash}>Referenced Output Hash</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.index}>Referenced Index</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.amount}>Amount</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.address}>Sender Address</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.address}>Receiver Address</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.status}>Status</TableHeaderColumn>
                       </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                      {transactions.map(item =>
-                        <TableRow key={item._id}>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>12/12/2017 12:12:12</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.hash}>{item.referencedOutputHash}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.index}>{item.referencedOutputIndex}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsReceiverTable.amount}>{item.amount}</TableHeaderColumn>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                    
-                  </Table>
-                </div>
-
-                <div className="row">
-                  <Pager
-                    total={this.state.receiverTotal}
-                    current={this.state.receiverCurrent}
-                    visiblePages={this.state.receiverVisiblePage}
-                    titles={{ first: '<|', last: '>|' }}
-                    className="pagination-sm pull-right"
-                    onPageChanged={this.handleReceiverPageChanged}
-                  />       
-                </div>
-                <div style={globalStyles.clear}/>
-              </Paper>
-            </div>
-          </Tab>
-          <Tab label="Gửi tiền" >
-            <div>
-              <Paper style={globalStyles.paper}>
-                <h3 style={globalStyles.title}>Giao dịch gửi tiền</h3>
-                <div>
-                  <Table fixedFooter={this.state.fixedFooter}>
-                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
-                                  displaySelectAll={this.state.showCheckboxes}>
-                      <TableRow>
-                        <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                      {transactions.map(item => {
+                      {transactions.map(item =>{
                         var status_style = {};
                         switch(item.status) {
                           case 'waiting': {
@@ -246,7 +177,7 @@ class TransactionDetailPage extends React.Component {
                             status_style = styles.columnsSenderTable.status_fail;
                             break;
                           }
-                          case 'sucess': {
+                          case 'success': {
                             status_style = styles.columnsSenderTable.status_success;
                             break;
                           }
@@ -254,33 +185,34 @@ class TransactionDetailPage extends React.Component {
                         // console.log(status_style);
                         return(
                           <TableRow key={item._id}>
-                          <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>12/12/2017 12:12:12</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableHeaderColumn>
-                          <TableHeaderColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableHeaderColumn>
-                          <TableHeaderColumn style={status_style}>{item.status}</TableHeaderColumn>                
-                          </TableRow>                         
+                            <TableHeaderColumn style={styles.columnsTable.timestamp}>{item.timestamp}</TableHeaderColumn>
+                            <TableHeaderColumn style={styles.columnsTable.hash}>{item.referencedOutputHash}</TableHeaderColumn>
+                            <TableHeaderColumn style={styles.columnsTable.index}>{item.referencedOutputIndex}</TableHeaderColumn>
+                            <TableHeaderColumn style={styles.columnsTable.amount}>{item.amount}</TableHeaderColumn>
+                            <TableHeaderColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableHeaderColumn>
+                            <TableHeaderColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableHeaderColumn>
+                            <TableHeaderColumn style={status_style}>{item.status}</TableHeaderColumn>
+                          </TableRow>                       
                         )}
                       )}
                     </TableBody>
+                    
                   </Table>
                 </div>
 
                 <div className="row">
                   <Pager
-                    total={this.state.senderTotal}
-                    current={this.state.senderCurrent}
-                    visiblePages={this.state.senderVisiblePage}
+                    total={this.state.total}
+                    current={this.state.current}
+                    visiblePages={this.state.visiblePage}
                     titles={{ first: '<|', last: '>|' }}
                     className="pagination-sm pull-right"
-                    onPageChanged={this.handleSenderPageChanged}
+                    onPageChanged={this.handlePageChanged}
                   />       
                 </div>
                 <div style={globalStyles.clear}/>
               </Paper>
             </div>
-          </Tab>
-        </Tabs>
-        
       </div>
     );
   }
