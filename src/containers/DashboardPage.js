@@ -20,16 +20,17 @@ class DashboardPage extends React.Component {
   constructor(props) {
     super(props);
 
+    const cookies = new Cookies();
+    const email = cookies.get('email');
     this.state = { 
       address:"",
       actual_amount: 0,
-      available_amount: 0
+      available_amount: 0,
+      email:email
     }
   }
 
   getExistEmail() {
-    const cookies = new Cookies();
-    return cookies.get('email');
   }
 
   loadData() {
@@ -39,7 +40,7 @@ class DashboardPage extends React.Component {
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     // axios.post(apiLink+'/api/transactions', {
-    //   "email":this.getExistEmail()
+    //   "email":self.email
     // })
     // .then(function (response) {
     //   console.log(response);
@@ -57,7 +58,7 @@ class DashboardPage extends React.Component {
     // });
 
     axios.post(apiLink+'/api/user-info', {
-      "email":this.getExistEmail()
+      "email":self.email
     })
     .then(function (response) {
       console.log(response);
@@ -89,8 +90,14 @@ class DashboardPage extends React.Component {
   }
 
   componentWillMount(){
-    if(this.getExistEmail() == "") {
+
+    const cookies = new Cookies();
+    const role = cookies.get('role');
+    if(this.state.email == "") {
       browserHistory.push('/login');
+    }
+    else if(role != "User") {
+      browserHistory.push('/*');
     }
   }
 
