@@ -79,7 +79,7 @@ class AddTransactionPage extends React.Component {
     if(email == "") {
       browserHistory.push('/login');
     }
-    else if(role != "User") {
+    else if(role != "user") {
       browserHistory.push('/*');
     }
   }

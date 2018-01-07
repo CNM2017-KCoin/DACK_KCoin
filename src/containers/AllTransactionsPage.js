@@ -62,7 +62,7 @@ class TransactionDetailPage extends React.Component {
     if(email == "") {
       browserHistory.push('/login');
     }
-    else if(role != "Admin") {
+    else if(role != "admin") {
       browserHistory.push('/*');
     }
   }
@@ -104,7 +104,8 @@ class TransactionDetailPage extends React.Component {
       },
       columnsTable: {
         timestamp: {
-          width: '13%'
+          width: '13%',
+          fontSize: 11
         },
         senderAddress: {
           width: '20%',

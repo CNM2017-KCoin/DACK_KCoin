@@ -16,6 +16,7 @@ class Header extends React.Component {
   handleClick(event){
     const cookies = new Cookies();
     cookies.set('email', "", { path: '/' });
+    cookies.set('role', "", { path: '/' });
   }
   
   render() {
