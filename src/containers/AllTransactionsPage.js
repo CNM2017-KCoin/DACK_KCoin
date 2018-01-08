@@ -1,5 +1,5 @@
 import React from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
@@ -26,34 +26,56 @@ class TransactionDetailPage extends React.Component {
       super(props);
       this.handlePageChanged = this.handlePageChanged.bind(this);
       this.state = {
+        transList: [],
         showCheckboxes: false,
-        total:       5,
-        current:     1,
-        visiblePage: 1
+        total:       0,
+        current:     0,
+        visiblePage: 1,
+        report: 'Đang xử lý...'
       };
 
         // this.updateRows = this.updateRows.bind(this);
   }
-  // loadData() {
-  //   var self = this;
-  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-  //   axios.get(apiLink+'/users/'+Data.user.email)
-  //   .then(function (response) {
-  //     console.log(response.data);
-  //     self.props.dispatch(actions.getData(response.data));
-  //   })
-  //   .catch(function (error) {
-  //     console.log('Request failed', error);
-  //   });
-  // }
+  loadData(offset) {
+    var self = this;
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/all-transactions', {
+      offset:offset
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        let report = 'Đang xử lý...';
+        if(res.data.trans_list.length == 0) {
+          report = 'Không tìm thấy giao dịch nào';
+        }
 
-  // componentDidMount() {
-  //   this.loadData();    
-  // }
+        self.setState({
+          transList: res.data.trans_list,
+          total: Math.ceil(res.data.total_trans/10),
+          report: report
+        })
+      } else  {
+        alert('Load failed:', res.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load failed', error);
+      return;
+    });
+  }
 
-  // componentWillReceiveProps() {
-  //   this.loadData();
-  // }
+  componentDidMount() {
+    this.loadData(this.state.current);    
+  }
+
+  componentWillReceiveProps() {
+    this.loadData(this.state.current);
+  }
+
   componentWillMount(){
 
     const cookies = new Cookies();
@@ -72,13 +94,6 @@ class TransactionDetailPage extends React.Component {
     console.log(newPage);
     this.setState({ 
       current: newPage
-    });
-  };
-
-  handleTabChange = () => {
-    // console.log(this);
-    this.setState({
-      isReceiverTab: !this.state.isReceiverTab
     });
   };
 
@@ -145,92 +160,91 @@ class TransactionDetailPage extends React.Component {
       }
     };
 
-    var transactions = Data.admin.transactions;
-    if(transactions == null) {
-      return(<div>The responsive it not here yet!</div>);
-    }
-    return (
-      <div>
-        <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+    var transactions = this.state.transList;
+    if(transactions == null || transactions.length == 0) {
+      return (
         <div>
-              <Paper style={globalStyles.paper}>
-                <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
-                <div>
-                  <Table>
-                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
-                                  displaySelectAll={this.state.showCheckboxes}>
-                      <TableRow>
-                        <TableHeaderColumn style={styles.columnsTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.hash}>Ref Output Hash</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.index}>Ref Index</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.amount}>Amount</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.address}>Sender Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.address}>Receiver Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsTable.status}>Status</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                      {transactions.map(item =>{
-                        var statusStyle = {};
-                        var statusText = '';
-                        switch(item.status) {
-                          case 'waiting': {
-                            statusStyle = styles.columnsTable.status_waiting;
-                            statusText = "Đang xử lý";
-                            break;
+          <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+          <h3>{this.state.report}</h3>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+          <div>
+                <Paper style={globalStyles.paper}>
+                  <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
+                  <div>
+                    <Table>
+                      <TableHeader adjustForCheckbox={this.state.showCheckboxes}
+                                    displaySelectAll={this.state.showCheckboxes}>
+                        <TableRow>
+                          <TableHeaderColumn style={styles.columnsTable.timestamp}>Time</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsTable.hash}>Ref Output Hash</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsTable.index}>Ref Index</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsTable.amount}>Amount</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsTable.address}>Sender Address</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsTable.address}>Receiver Address</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsTable.status}>Status</TableHeaderColumn>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                        {transactions.map(item =>{
+                          var statusStyle = {};
+                          var statusText = '';
+                          switch(item.status) {
+                            case 'waiting': {
+                              statusStyle = styles.columnsTable.status_waiting;
+                              statusText = "Đang xử lý";
+                              break;
+                            }
+                            case 'fail': {
+                              statusStyle = styles.columnsTable.status_fail;
+                              statusText = "Thất bại";
+                              break;
+                            }
+                            case 'success': {
+                              statusStyle = styles.columnsTable.status_success;
+                              statusText = "Thành công";
+                              break;
+                            }
                           }
-                          case 'fail': {
-                            statusStyle = styles.columnsTable.status_fail;
-                            statusText = "Thất bại";
-                            break;
-                          }
-                          case 'success': {
-                            statusStyle = styles.columnsTable.status_success;
-                            statusText = "Thành công";
-                            break;
-                          }
-                        }
-                        // console.log(statusStyle);
-                        return(
-                          <TableRow key={item._id}>
-                            <TableRowColumn style={styles.columnsTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
-                            <TableRowColumn style={styles.columnsTable.hash}>{item.referencedOutputHash}</TableRowColumn>
-                            <TableRowColumn style={styles.columnsTable.index}>{item.referencedOutputIndex}</TableRowColumn>
-                            <TableRowColumn style={styles.columnsTable.amount}>{item.amount}</TableRowColumn>
-                            <TableRowColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableRowColumn>
-                            <TableRowColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableRowColumn>
-                            <TableRowColumn style={statusStyle}>{statusText}</TableRowColumn>
-                          </TableRow>                       
+                          // console.log(statusStyle);
+                          return(
+                            <TableRow key={item._id}>
+                              <TableRowColumn style={styles.columnsTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.hash}>{item.ref_hash}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.index}>{item.ref_index}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.amount}>{item.amount}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableRowColumn>
+                              <TableRowColumn style={statusStyle}>{statusText}</TableRowColumn>
+                            </TableRow>                       
+                          )}
                         )}
-                      )}
-                    </TableBody>
-                    
-                  </Table>
-                </div>
+                      </TableBody>
+                      
+                    </Table>
+                  </div>
 
-                <div className="row">
-                  <Pager
-                    total={this.state.total}
-                    current={this.state.current}
-                    visiblePages={this.state.visiblePage}
-                    titles={{ first: '<|', last: '>|' }}
-                    className="pagination-sm pull-right"
-                    onPageChanged={this.handlePageChanged}
-                  />       
-                </div>
-                <div style={globalStyles.clear}/>
-              </Paper>
-            </div>
-      </div>
-    );
+                  <div className="row">
+                    <Pager
+                      total={this.state.total}
+                      current={this.state.current}
+                      visiblePages={this.state.visiblePage}
+                      titles={{ first: '<|', last: '>|' }}
+                      className="pagination-sm pull-right"
+                      onPageChanged={this.handlePageChanged}
+                    />       
+                  </div>
+                  <div style={globalStyles.clear}/>
+                </Paper>
+              </div>
+        </div>
+      );
+    }
   }
 }
-
-const mapStateToProps = (state) =>{
-  return {
-    user: state.mainReducer.user
-  };
-}
-// export default connect (mapStateToProps)(TransactionDetailPage);
 
 export default TransactionDetailPage;
