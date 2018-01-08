@@ -14,87 +14,63 @@ import ThemeDefault from '../theme-default';
 import Data from '../data';
 const Utils = require('../services/utils');
 
-class RegisterPage extends React.Component {
+class VertifyPage extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = { 
-      errorTxtPass: '', 
-      errorTxtEmail: '',
-      errorTxtVertifyPass: ''
+      errorTxtVertifyCode: ''
     }
   }
 
   onChange(event, newValue) {
     if (event.target.value == '') {
       switch(event.target.id) {
-        case 'email': {
-          this.setState({ errorTxtEmail: 'Email is required' });
-          return;
-        }
-        case 'password': {
-          this.setState({ errorTxtPass: 'Password is required' });
-          return;
-        }
-        case 'vertifyPass': {
-          this.setState({ errorTxtVertifyPass: 'Vertify Password is required' });
+        case 'vertifyCode': {
+          this.setState({ errorTxtVertifyCode: 'Vertify Password is required' });
           return;
         }
       }
     } else {
       this.setState ({ 
-        errorTxtPass: '', 
-        errorTxtEmail: '',
-        errorTxtVertifyPass: ''
+        errorTxtVertifyCode: ''
       });
     }
   }
 
   handleClick(event) {
 
-    const txtEmail = document.getElementById('email');
-    const txtPassword = document.getElementById('password');
-    const txtVertifyPass = document.getElementById('vertifyPass');
+    const txtVertifyCode = document.getElementById('vertifyCode');
 
-    if(txtEmail.value == "") {
-      this.setState({ errorTxtEmail: 'Email is required' })
-      return;
-    }
-    if(txtPassword.value == "") {
-      this.setState({ errorTxtPass: 'Password is required' })
-      return;
-    }
-    if(txtVertifyPass.value == "") {
-      this.setState({ errorTxtVertifyPass: 'Vertify Password is required' })
+    
+    if(txtVertifyCode.value == "") {
+      this.setState({ errorTxtVertifyCode: 'Vertify Code is required' })
       return;
     }
 
-    if(txtPassword.value != txtVertifyPass.value) {
-      this.setState({ errorTxtVertifyPass: 'Wrong Vertify!' })
-      return;
-    }
-    var passwordHash = Utils.hash(txtPassword.value).toString('hex');
-    // send request
+    let email = this.props.location.query.email;
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
-    axios.post(apiLink+'/api/register', {
-      "email":txtEmail.value,
-      "password":passwordHash
+    axios.post(apiLink+'/api/vertify', {
+      email:email,
+      code:txtVertifyCode.value
     })
     .then(function (response) {
       console.log(response);
       if(response.data.status ==  200) {
-        alert('Register Successfully');
-        browserHistory.push('/vertify?email=' + txtEmail.value);
+        alert('Vertify Successfully');
+        browserHistory.push('/login');
       } else  {
-        alert('Register Failed: Email was registered');
+        alert('Vertify Failed');
       }
       return;
     })
     .catch(function (error) {
       console.log(error);
-      alert('Register failed: ', error);
+      alert('Vertify failed: ', error);
       return;
     });
+
+    // browserHistory.push('/login');
 
   }
 
@@ -140,32 +116,11 @@ class RegisterPage extends React.Component {
 
               <form>
                 <TextField
-                  id="email"
-                  hintText="Email"
-                  floatingLabelText="Email"
+                  id="vertifyCode"
+                  hintText="Vertify Code"
+                  floatingLabelText="Vertify Code"
                   fullWidth={true}
-                  type="email"
-                  errorText= {this.state.errorTxtEmail}
-                  onChange={this.onChange.bind(this)}
-                />
-
-                <TextField
-                  id="password"
-                  hintText="Password"
-                  floatingLabelText="Password"
-                  type = "password"
-                  fullWidth={true}
-                  errorText= {this.state.errorTxtPass}
-                  onChange={this.onChange.bind(this)}
-                />
-                
-                <TextField
-                  id="vertifyPass"
-                  hintText="Vertify Password"
-                  floatingLabelText="Vertify Password"
-                  type = "password"
-                  fullWidth={true}
-                  errorText= {this.state.errorTxtVertifyPass}
+                  errorText= {this.state.errorTxtVertifyCode}
                   onChange={this.onChange.bind(this)}
                 />
 
@@ -191,4 +146,4 @@ class RegisterPage extends React.Component {
   }
 }
 
-export default RegisterPage;
+export default VertifyPage;

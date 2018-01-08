@@ -5,6 +5,7 @@ import NotFoundPage from './containers/NotFoundPage.js';
 import LoginPage from './containers/LoginPage';
 import AddTransactionPage from './containers/AddTransactionPage';
 import RegisterPage from './containers/RegisterPage';
+import VertifyPage from './containers/VertifyPage';
 import TransactionDetailPage from './containers/TransactionDetailPage';
 import AllTransactionsPage from './containers/AllTransactionsPage';
 import UserDetailPage from './containers/UserDetailPage';
@@ -14,6 +15,7 @@ export default (
   <Route>
     <Route path="register" component={RegisterPage}/>
     <Route path="login" component={LoginPage}/>
+    <Route path="vertify" component={VertifyPage}/>
     <Route path="/" component={HomePage}>
       <Route path="dashboard" component={Dashboard}/>
       <Route path="addTransaction" component={AddTransactionPage}/>

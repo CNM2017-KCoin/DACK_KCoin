@@ -45,29 +45,8 @@ class TransactionDetailPage extends React.Component {
         senderReport: 'Đang xử lý...',
         receiverReport: 'Đang xử lý...'
       };
-
-        // this.updateRows = this.updateRows.bind(this);
   }
-  // loadData() {
-  //   var self = this;
-  //   const apiLink = 'https://nameless-escarpment-79889.herokuapp.com';
-  //   axios.get(apiLink+'/users/'+Data.user.email)
-  //   .then(function (response) {
-  //     console.log(response.data);
-  //     self.props.dispatch(actions.getData(response.data));
-  //   })
-  //   .catch(function (error) {
-  //     console.log('Request failed', error);
-  //   });
-  // }
-
-  // componentDidMount() {
-  //   this.loadData();    
-  // }
-
-  // componentWillReceiveProps() {
-  //   this.loadData();
-  // }
+  
   componentWillMount(){
     if(this.state.email == "") {
       browserHistory.push('/login');

@@ -26,7 +26,9 @@ class DashboardPage extends React.Component {
       address:"",
       actual_amount: 0,
       available_amount: 0,
-      email:email
+      email:email,
+      receiverReport: 'Đang xử lý...',
+      receiverTrans: []
     }
   }
 
@@ -81,12 +83,48 @@ class DashboardPage extends React.Component {
     });
   }
 
+  loadReceiverData(offset) {
+    var self = this;
+    console.log(offset+"  "+this.state.email);
+  
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/transaction-input', {
+      email:self.state.email, 
+      offset:offset
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        let receiverReport = 'Đang xử lý...';
+        if(res.data.receiver_trans.length == 0) {
+          receiverReport = 'Không tìm thấy giao dịch nào';
+        }
+        self.setState({
+          receiverTrans: res.data.receiver_trans,
+          receiverReport: receiverReport
+        })
+      } else  {
+        alert('Load users failed:', res.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load users failed', error);
+      return;
+    });
+  }
+
   componentWillReceiveProps() {
     this.loadData();
+    this.loadReceiverData(0);
   }
 
   componentDidMount() {
     this.loadData();
+    this.loadReceiverData(0);
   }
 
   componentWillMount(){
@@ -103,9 +141,47 @@ class DashboardPage extends React.Component {
 
   render() {
     // const user = this.props.user;
-    const user = Data.user;
-    if(user == null) {
-      return(<div>The responsive it not here yet!</div>);
+    if(this.state.receiverTrans == null || this.state.receiverTrans.length == 0) {
+      return(
+        <div>
+          <h3 style={globalStyles.navigation}>Ví KCoin / Trang chủ</h3>
+
+          <div className="row">
+
+            <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
+              <InfoBox Icon={RealMoneyIco}
+                       color={pink600}
+                       title="Số dư thực tế"
+                       value={this.state.actual_amount}
+              />
+            </div>
+
+            <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
+              <InfoBox Icon={UsedMoneyIco}
+                       color={purple600}
+                       title="Số dư khả dụng"
+                       value={this.state.available_amount}
+              />
+            </div>
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
+              <InfoBox Icon={AddressIco}
+                       color={orange600}
+                       title="Địa chỉ giao dịch"
+                       value={this.state.address}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">  
+              <h3>Giao dịch nhận tiền</h3>      
+              <div>{this.state.receiverReport}</div>
+            </div>
+            <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15" >
+                <QRCode value={this.state.address} size={350}/>
+            </div>
+          </div>
+        </div>
+      );
     }
     return (
       <div>
@@ -138,7 +214,7 @@ class DashboardPage extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15 ">
-            <RecentTransaction data={user.receiverTrans} title="Giao dịch nhận tiền"/>
+            <RecentTransaction data={this.state.receiverTrans} title="Giao dịch nhận tiền"/>
           </div>
           <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15" >
               <QRCode value={this.state.address} size={350}/>
@@ -149,10 +225,4 @@ class DashboardPage extends React.Component {
   }
 }
 
-const mapStateToProps = (state) =>{
-  return {
-    user: state.mainReducer.user
-  };
-}
-// export default connect (mapStateToProps)(DashboardPage);
 export default DashboardPage;

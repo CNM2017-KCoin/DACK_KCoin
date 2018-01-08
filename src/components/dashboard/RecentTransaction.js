@@ -61,9 +61,9 @@ class RecentTransaction extends React.Component {
           <br/>
           Amount: {item.amount}
           <br/>
-          Referenced output hash: {item.referencedOutputHash}
+          Referenced output hash: {item.ref_hash}
           <br/>
-          Referenced output index: {item.referencedOutputIndex}
+          Referenced output index: {item.ref_index}
         </div>);
       } 
 
@@ -92,7 +92,7 @@ class RecentTransaction extends React.Component {
           {this.props.data.map(item => {
               if(item.sender_address == null) {
                 return(
-                  <div key={item._id}>
+                  <div key={item.transaction_id}>
                     <ListItem
                       leftAvatar={<Avatar icon={<SendIco />} />}
                       primaryText={"Amount:"+ item.amount}
@@ -105,7 +105,7 @@ class RecentTransaction extends React.Component {
                 );
               } else {
                 return(
-                  <div key={item._id}>
+                  <div key={item.transaction_id}>
                     <ListItem
                       leftAvatar={<Avatar icon={<ReceiverIco />} />}
                       primaryText={"Amount:"+ item.amount}
