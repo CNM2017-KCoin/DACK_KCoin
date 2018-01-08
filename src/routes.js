@@ -15,7 +15,6 @@ export default (
     <Route path="register" component={RegisterPage}/>
     <Route path="login" component={LoginPage}/>
     <Route path="/" component={HomePage}>
-      <IndexRoute component={Dashboard}/>
       <Route path="dashboard" component={Dashboard}/>
       <Route path="addTransaction" component={AddTransactionPage}/>
       <Route path="transactions" component={TransactionDetailPage}/>
