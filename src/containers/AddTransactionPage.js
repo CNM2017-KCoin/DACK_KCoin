@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-// import axios from 'axios';
+import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -79,6 +79,8 @@ class AddTransactionPage extends React.Component {
 
   handleVertifyClick(event) {
 
+    var self = this;
+
     const txtAddress = document.getElementById('receiver_address');
     const txtAmount = document.getElementById('amount');
 
@@ -94,7 +96,7 @@ class AddTransactionPage extends React.Component {
     //send vertify request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/send-validate', {
-      email:email
+      email: self.state.email
     })
     .then(function (response) {
       console.log(response);
