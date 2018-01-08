@@ -1,5 +1,5 @@
 import React from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
@@ -27,12 +27,13 @@ class TransactionDetailPage extends React.Component {
       this.handleSenderPageChanged = this.handleSenderPageChanged.bind(this);
       this.handleReceiverPageChanged = this.handleReceiverPageChanged.bind(this);
       this.state = {
+        transactions: [],
         showCheckboxes: false,
-        senderTotal:       5,
-        senderCurrent:     1,
+        senderTotal:       0,
+        senderCurrent:     0,
         senderVisiblePage: 1,
-        receiverTotal:       5,
-        receiverCurrent:     1,
+        receiverTotal:       0,
+        receiverCurrent:     0,
         receiverVisiblePage: 1,
         isReceiverTab: true //send,receive
       };
@@ -76,6 +77,7 @@ class TransactionDetailPage extends React.Component {
 
   handleSenderPageChanged (newPage) {
     console.log(newPage);
+    this.loadSenderData(newPage);
     this.setState({ 
       senderCurrent: newPage
     });
@@ -83,18 +85,99 @@ class TransactionDetailPage extends React.Component {
 
   handleReceiverPageChanged (newPage) {
     console.log(newPage);
+    // this.loadReceiverData(newPage);
     this.setState({
      receiverCurrent: newPage 
    });
   };
 
+  loadReceiverData(offset) {
+    var self = this;
+  
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/transaction-input', {
+      email:self.state.email, 
+      "offset":offset
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        self.setState({
+          transactions: res.data.receiver_trans,
+          receiverTotal: Math.ceil(res.data.total_receiver_trans/10)
+        })
+      } else  {
+        alert('Load users failed:', res.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load users failed', error);
+      return;
+    });
+  }
+
+  loadSenderData(offset) {
+    var self = this;
+    console.log(offset);
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/transaction-output', {
+      email:self.state.email, 
+      "offset":offset
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        self.setState({
+          transactions: res.data.sender_trans,
+          senderTotal: Math.ceil(res.data.total_sender_trans/10)
+        })
+      } else  {
+        alert('Load users failed:', res.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load users failed', error);
+      return;
+    });
+  }
+
   handleTabChange = () => {
     // console.log(this);
+    let isReceiverTab = !this.state.isReceiverTab;
+    if(isReceiverTab) {
+      this.loadReceiverData(0);
+    } else {
+      this.loadSenderData(0);
+    }
     this.setState({
-      isReceiverTab: !this.state.isReceiverTab
+      senderCurrent: 0,
+      isReceiverTab: isReceiverTab
     });
   };
 
+  componentWillReceiveProps() {
+    if(this.state.isReceiverTab) {
+      this.loadReceiverData(this.state.receiverCurrent)
+    } else {
+      this.loadSenderData(this.state.senderCurrent);
+    };
+  }
+  
+  componentDidMount() {
+    if(this.state.isReceiverTab) {
+      this.loadReceiverData(this.state.receiverCurrent)
+    } else {
+      this.loadSenderData(this.state.senderCurrent);
+    };
+  }
 
   render() {
     const styles = {
@@ -162,12 +245,12 @@ class TransactionDetailPage extends React.Component {
       }
     };
 
-    var transactions = [];
-    if(this.state.isReceiverTab) {
-      transactions = Data.user.receiverTrans; 
-    } else {
-      transactions = Data.user.senderTrans;
-    }
+    var transactions = this.state.transactions;
+    // if(this.state.isReceiverTab) {
+    //   transactions = Data.user.receiverTrans; 
+    // } else {
+    //   transactions = Data.user.senderTrans;
+    // }
     if(transactions == null) {
       return(<div>The responsive it not here yet!</div>);
     }
