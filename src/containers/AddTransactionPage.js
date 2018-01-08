@@ -18,7 +18,12 @@ class AddTransactionPage extends React.Component {
   constructor(props) {
     super(props)
 
+    const cookies = new Cookies();
+    const email = cookies.get('email');
     this.state = { 
+      email: email,
+      receiver_address:'',
+      amount:'',
       errorTxtAddress: '',
       errorTxtAmount: '',
       errorTxtVertifyPass: '',
@@ -43,9 +48,77 @@ class AddTransactionPage extends React.Component {
       this.setState({ errorTxtCode: 'Code is required' })
       return;
     }
+
+    //post transaction
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/send', {
+      code: txtCode.value,
+      password: txtVertifyPass.value,
+      email: this.state.email,
+      receiver_address: this.state.receiver_address,
+      amount: this.state.amount
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status == 200){
+        alert('Gửi giao dịch thành công!');
+      } else if(response.status == 400) {
+        alert('Số dư trong tài khoản không đủ để thực hiện giao dịch');
+      } else {
+        alert('Giao dịch không thành công');
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Giao dịch thất bại');
+    });
+
     this.setState({open: false});
     browserHistory.push('/transactions');
   };
+
+  handleVertifyClick(event) {
+
+    const txtAddress = document.getElementById('receiver_address');
+    const txtAmount = document.getElementById('amount');
+
+    if(txtAddress.value == "") {
+      this.setState({ errorTxtAddress: 'Address is required' })
+      return;
+    }
+    if(txtAmount.value == "" || parseInt(txtAmount.value) <= 0) {
+      this.setState({ errorTxtAmount: 'Amount is required and larger than 0' })
+      return;
+    }
+
+    //send vertify request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/send-validate', {
+      email:email
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status == 200){
+        alert('Yêu cầu xác nhận thành công!');
+
+        this.setState({
+          receiver_address: txtAddress.value,
+          amount: txtAmount.value
+        })
+        this.handleOpenVertify();
+
+      } else {
+        alert('Yêu cầu xác nhận thất bại');
+        return;
+      }
+
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Giao dịch thất bại');
+    });
+
+  }
 
   onChange(event, newValue) {
     if (event.target.value == '') {
@@ -86,6 +159,7 @@ class AddTransactionPage extends React.Component {
       });
     }
   }
+
   // handleClick(event){
   //   const email = document.getElementById('email').value;
   //   const amount = document.getElementById('amount').value;
@@ -116,6 +190,7 @@ class AddTransactionPage extends React.Component {
   //     alert('Add Transaction failed');
   //   });
   //  }
+
   componentWillMount(){
 
     const cookies = new Cookies();
@@ -127,23 +202,6 @@ class AddTransactionPage extends React.Component {
     else if(role != "user") {
       browserHistory.push('/*');
     }
-  }
-
-  handleClick(event) {
-
-    const txtAddress = document.getElementById('receiver_address');
-    const txtAmount = document.getElementById('amount');
-
-    if(txtAddress.value == "") {
-      this.setState({ errorTxtAddress: 'Address is required' })
-      return;
-    }
-    if(txtAmount.value == "" || parseInt(txtAmount.value) <= 0) {
-      this.setState({ errorTxtAmount: 'Amount is required and larger than 0' })
-      return;
-    }
-
-    this.handleOpenVertify();
   }
 
   render() {
@@ -235,7 +293,7 @@ class AddTransactionPage extends React.Component {
 
             <RaisedButton label="Xác nhận"
               style={styles.saveButton}
-              onClick={(event) => this.handleClick(event)}
+              onClick={(event) => this.handleVertifyClick(event)}
               primary={true}/>
           </div>
         </form>
@@ -243,6 +301,7 @@ class AddTransactionPage extends React.Component {
             title="Xác nhận giao dịch"
             modal={true}
             open={this.state.open}>
+            <div>Vui lòng kiểm tra email để lấy mã xác nhận cho giao dịch</div>
             {context}
           </Dialog>
       </PageBase>

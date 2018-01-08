@@ -171,22 +171,26 @@ class TransactionDetailPage extends React.Component {
                     </TableHeader>
                     <TableBody displayRowCheckbox={this.state.showCheckboxes}>
                       {transactions.map(item =>{
-                        var status_style = {};
+                        var statusStyle = {};
+                        var statusText = '';
                         switch(item.status) {
                           case 'waiting': {
-                            status_style = styles.columnsTable.status_waiting;
+                            statusStyle = styles.columnsTable.status_waiting;
+                            statusText = "Đang xử lý";
                             break;
                           }
                           case 'fail': {
-                            status_style = styles.columnsTable.status_fail;
+                            statusStyle = styles.columnsTable.status_fail;
+                            statusText = "Thất bại";
                             break;
                           }
                           case 'success': {
-                            status_style = styles.columnsTable.status_success;
+                            statusStyle = styles.columnsTable.status_success;
+                            statusText = "Thành công";
                             break;
                           }
                         }
-                        // console.log(status_style);
+                        // console.log(statusStyle);
                         return(
                           <TableRow key={item._id}>
                             <TableRowColumn style={styles.columnsTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
@@ -195,7 +199,7 @@ class TransactionDetailPage extends React.Component {
                             <TableRowColumn style={styles.columnsTable.amount}>{item.amount}</TableRowColumn>
                             <TableRowColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableRowColumn>
                             <TableRowColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableRowColumn>
-                            <TableRowColumn style={status_style}>{item.status}</TableRowColumn>
+                            <TableRowColumn style={statusStyle}>{statusText}</TableRowColumn>
                           </TableRow>                       
                         )}
                       )}
