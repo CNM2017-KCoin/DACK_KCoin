@@ -40,7 +40,19 @@ class HomePage extends React.Component {
   }
 
   componentWillMount(){
-    if(this.state.email == "" || this.state.role == "") {
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    const role = cookies.get('role');
+    console.log(this.state.email+"  "+this.state.role);
+    if(this.state.email == null || this.state.role == null) {
+      browserHistory.push('/login');
+      return;
+    }
+    if(this.state.role == "admin") {
+      browserHistory.push('/all_users');
+    } else if(this.state.role == "user"){
+      browserHistory.push('/dashboard');
+    } else {
       browserHistory.push('/login');
     }
   }
