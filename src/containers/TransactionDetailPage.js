@@ -26,8 +26,14 @@ class TransactionDetailPage extends React.Component {
       super(props);
       this.handleSenderPageChanged = this.handleSenderPageChanged.bind(this);
       this.handleReceiverPageChanged = this.handleReceiverPageChanged.bind(this);
+      const cookies = new Cookies();
+      const email = cookies.get('email');
+      const role = cookies.get('role');
       this.state = {
-        transactions: [],
+        email: email,
+        role: role,
+        receiver_trans: [],
+        sender_trans: [],
         showCheckboxes: false,
         senderTotal:       0,
         senderCurrent:     0,
@@ -35,7 +41,9 @@ class TransactionDetailPage extends React.Component {
         receiverTotal:       0,
         receiverCurrent:     0,
         receiverVisiblePage: 1,
-        isReceiverTab: true //send,receive
+        isReceiverTab: true, //send,receive
+        senderReport: 'Đang xử lý...',
+        receiverReport: 'Đang xử lý...'
       };
 
         // this.updateRows = this.updateRows.bind(this);
@@ -61,15 +69,10 @@ class TransactionDetailPage extends React.Component {
   //   this.loadData();
   // }
   componentWillMount(){
-
-    const cookies = new Cookies();
-    const email = cookies.get('email');
-    const role = cookies.get('role');
-    console.log(email);  
     if(this.state.email == "") {
       browserHistory.push('/login');
     }
-    else if(role != "user") {
+    else if(this.state.role != "user") {
       browserHistory.push('/*');
     }
   }
@@ -85,7 +88,7 @@ class TransactionDetailPage extends React.Component {
 
   handleReceiverPageChanged (newPage) {
     console.log(newPage);
-    // this.loadReceiverData(newPage);
+    this.loadReceiverData(newPage);
     this.setState({
      receiverCurrent: newPage 
    });
@@ -93,20 +96,26 @@ class TransactionDetailPage extends React.Component {
 
   loadReceiverData(offset) {
     var self = this;
+    console.log(offset+"  "+this.state.email);
   
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/transaction-input', {
       email:self.state.email, 
-      "offset":offset
+      offset:offset
     })
     .then(function (response) {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
+        let receiverReport = 'Đang xử lý...';
+        if(res.data.receiver_trans.length == 0) {
+          receiverReport = 'Không tìm thấy giao dịch nào';
+        }
         self.setState({
-          transactions: res.data.receiver_trans,
-          receiverTotal: Math.ceil(res.data.total_receiver_trans/10)
+          receiver_trans: res.data.receiver_trans,
+          receiverTotal: Math.ceil(res.data.total_receiver_trans/10),
+          receiverReport: receiverReport
         })
       } else  {
         alert('Load users failed:', res.data.error);
@@ -122,20 +131,26 @@ class TransactionDetailPage extends React.Component {
 
   loadSenderData(offset) {
     var self = this;
-    console.log(offset);
+
+    console.log(offset+"  "+this.state.email);
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/transaction-output', {
       email:self.state.email, 
-      "offset":offset
+      offset:offset
     })
     .then(function (response) {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
+        let senderReport = 'Đang xử lý...';
+        if(res.data.sender_trans.length == 0) {
+          senderReport = 'Không tìm thấy giao dịch nào';
+        }
         self.setState({
-          transactions: res.data.sender_trans,
-          senderTotal: Math.ceil(res.data.total_sender_trans/10)
+          sender_trans: res.data.sender_trans,
+          senderTotal: Math.ceil(res.data.total_sender_trans/10),
+          senderReport: senderReport
         })
       } else  {
         alert('Load users failed:', res.data.error);
@@ -150,15 +165,16 @@ class TransactionDetailPage extends React.Component {
   }
 
   handleTabChange = () => {
-    // console.log(this);
     let isReceiverTab = !this.state.isReceiverTab;
     if(isReceiverTab) {
       this.loadReceiverData(0);
     } else {
       this.loadSenderData(0);
     }
+
     this.setState({
       senderCurrent: 0,
+      receiverCurrent: 0,
       isReceiverTab: isReceiverTab
     });
   };
@@ -245,150 +261,160 @@ class TransactionDetailPage extends React.Component {
       }
     };
 
-    var transactions = this.state.transactions;
-    // if(this.state.isReceiverTab) {
-    //   transactions = Data.user.receiverTrans; 
-    // } else {
-    //   transactions = Data.user.senderTrans;
-    // }
-    if(transactions == null) {
-      return(<div>The responsive it not here yet!</div>);
+    var transactions = [];
+    if(this.state.isReceiverTab) {
+      transactions = this.state.receiver_trans; 
+    } else {
+      transactions = this.state.sender_trans;
     }
-    return (
-      <div>
-        <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
-        <Tabs onChange={this.handleTabChange}>
-          <Tab label="Nhận tiền" >
-            <div>
-              <Paper style={globalStyles.paper}>
-                <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
+    console.log(transactions);
+    if(transactions == null || transactions.length == 0) {
+      return (
+        <div>
+          <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+          <Tabs onChange={this.handleTabChange}>
+            <Tab label="Nhận tiền" >
+              <h3>{this.state.receiverReport}</h3>
+            </Tab>
+            <Tab label="Gửi tiền" >
+              <h3>{this.state.senderReport}</h3>
+            </Tab>
+          </Tabs>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
+          <Tabs onChange={this.handleTabChange}>
+            <Tab label="Nhận tiền" >
+              <div>
+                <Paper style={globalStyles.paper}>
+                  <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
 
-                <div>
-                  <Link to="/addTransaction" >
-                    <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
-                      <ContentAdd />
-                    </FloatingActionButton>
-                  </Link>
+                  <div>
+                    <Link to="/addTransaction" >
+                      <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
+                        <ContentAdd />
+                      </FloatingActionButton>
+                    </Link>
 
-                  <Table>
-                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
-                                  displaySelectAll={this.state.showCheckboxes}>
-                      <TableRow>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.address}>Sender Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.hash}>Referenced Output Hash</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.index}>Referenced Index</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsReceiverTable.amount}>Amount</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                      {transactions.map(item =>
-                        <TableRow key={item._id}>
-                        <TableRowColumn style={styles.columnsReceiverTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
-                          <TableRowColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsReceiverTable.hash}>{item.referencedOutputHash}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsReceiverTable.index}>{item.referencedOutputIndex}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsReceiverTable.amount}>{item.amount}</TableRowColumn>
+                    <Table>
+                      <TableHeader adjustForCheckbox={this.state.showCheckboxes}
+                                    displaySelectAll={this.state.showCheckboxes}>
+                        <TableRow>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.timestamp}>Time</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.address}>Sender Address</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.hash}>Referenced Output Hash</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.index}>Referenced Index</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsReceiverTable.amount}>Amount</TableHeaderColumn>
                         </TableRow>
-                      )}
-                    </TableBody>
-                    
-                  </Table>
-                </div>
-
-                <div className="row">
-                  <Pager
-                    total={this.state.receiverTotal}
-                    current={this.state.receiverCurrent}
-                    visiblePages={this.state.receiverVisiblePage}
-                    titles={{ first: '<|', last: '>|' }}
-                    className="pagination-sm pull-right"
-                    onPageChanged={this.handleReceiverPageChanged}
-                  />       
-                </div>
-                <div style={globalStyles.clear}/>
-              </Paper>
-            </div>
-          </Tab>
-          <Tab label="Gửi tiền" >
-            <div>
-              <Paper style={globalStyles.paper}>
-                <h3 style={globalStyles.title}>Giao dịch gửi tiền</h3>
-
-                <div>
-                  <Link to="/addTransaction" >
-                    <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
-                      <ContentAdd />
-                    </FloatingActionButton>
-                  </Link>
-
-                  <Table>
-                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
-                                  displaySelectAll={this.state.showCheckboxes}>
-                      <TableRow>
-                        <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>Time</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
-                        <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                      {transactions.map(item => {
-                        var status_style = {};
-                        switch(item.status) {
-                          case 'waiting': {
-                            status_style = styles.columnsSenderTable.status_waiting;
-                            break;
-                          }
-                          case 'fail': {
-                            status_style = styles.columnsSenderTable.status_fail;
-                            break;
-                          }
-                          case 'success': {
-                            status_style = styles.columnsSenderTable.status_success;
-                            break;
-                          }
-                        }
-                        // console.log(status_style);
-                        return(
-                          <TableRow key={item._id}>
-                          <TableRowColumn style={styles.columnsSenderTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
-                          <TableRowColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableRowColumn>
-                          <TableRowColumn style={status_style}>{item.status}</TableRowColumn>                
-                          </TableRow>                         
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                        {transactions.map(item =>
+                          <TableRow key={item.transaction_id}>
+                          <TableRowColumn style={styles.columnsReceiverTable.timestamp}>{item.timestamp}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsReceiverTable.address}>{item.sender_address}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsReceiverTable.hash}>{item.ref_hash}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsReceiverTable.index}>{item.ref_index}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsReceiverTable.amount}>{item.amount}</TableRowColumn>
+                          </TableRow>
                         )}
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
+                      </TableBody>
+                      
+                    </Table>
+                  </div>
 
-                <div className="row">
-                  <Pager
-                    total={this.state.senderTotal}
-                    current={this.state.senderCurrent}
-                    visiblePages={this.state.senderVisiblePage}
-                    titles={{ first: '<|', last: '>|' }}
-                    className="pagination-sm pull-right"
-                    onPageChanged={this.handleSenderPageChanged}
-                  />       
-                </div>
-                <div style={globalStyles.clear}/>
-              </Paper>
-            </div>
-          </Tab>
-        </Tabs>
-        
-      </div>
-    );
+                  <div className="row">
+                    <Pager
+                      total={this.state.receiverTotal}
+                      current={this.state.receiverCurrent}
+                      visiblePages={this.state.receiverVisiblePage}
+                      titles={{ first: '<|', last: '>|' }}
+                      className="pagination-sm pull-right"
+                      onPageChanged={this.handleReceiverPageChanged}
+                    />       
+                  </div>
+                  <div style={globalStyles.clear}/>
+                </Paper>
+              </div>
+            </Tab>
+            <Tab label="Gửi tiền" >
+              <div>
+                <Paper style={globalStyles.paper}>
+                  <h3 style={globalStyles.title}>Giao dịch gửi tiền</h3>
+
+                  <div>
+                    <Link to="/addTransaction" >
+                      <FloatingActionButton style={styles.floatingActionButton} backgroundColor={pink500}>
+                        <ContentAdd />
+                      </FloatingActionButton>
+                    </Link>
+
+                    <Table>
+                      <TableHeader adjustForCheckbox={this.state.showCheckboxes}
+                                    displaySelectAll={this.state.showCheckboxes}>
+                        <TableRow>
+                          <TableHeaderColumn style={styles.columnsSenderTable.timestamp}>Time</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsSenderTable.address}>Receiver Address</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsSenderTable.amount}>Amount</TableHeaderColumn>
+                          <TableHeaderColumn style={styles.columnsSenderTable.status}>status</TableHeaderColumn>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                        {transactions.map(item => {
+                          var statusStyle = {};
+                          var statusText = '';
+                          switch(item.status) {
+                            case 'waiting': {
+                              statusStyle = styles.columnsSenderTable.status_waiting;
+                              statusText = "Đang xử lý";
+                              break;
+                            }
+                            case 'fail': {
+                              statusStyle = styles.columnsSenderTable.status_fail;
+                              statusText = "Thất bại";
+                              break;
+                            }
+                            case 'success': {
+                              statusStyle = styles.columnsSenderTable.status_success;
+                              statusText = "Thành công";
+                              break;
+                            }
+                          }
+                          // console.log(status_style);
+                          return(
+                            <TableRow key={item.transaction_id}>
+                            <TableRowColumn style={styles.columnsSenderTable.timestamp}>{item.timestamp}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsSenderTable.address}>{item.receiver_address}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsSenderTable.amount}>{item.amount}</TableRowColumn>
+                            <TableRowColumn style={statusStyle}>{statusText}</TableRowColumn>                
+                            </TableRow>                         
+                          )}
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  <div className="row">
+                    <Pager
+                      total={this.state.senderTotal}
+                      current={this.state.senderCurrent}
+                      visiblePages={this.state.senderVisiblePage}
+                      titles={{ first: '<|', last: '>|' }}
+                      className="pagination-sm pull-right"
+                      onPageChanged={this.handleSenderPageChanged}
+                    />       
+                  </div>
+                  <div style={globalStyles.clear}/>
+                </Paper>
+              </div>
+            </Tab>
+          </Tabs>
+        </div>
+      );
+    }
   }
 }
-
-const mapStateToProps = (state) =>{
-  return {
-    user: state.mainReducer.user
-  };
-}
-// export default connect (mapStateToProps)(TransactionDetailPage);
 
 export default TransactionDetailPage;
