@@ -23,8 +23,11 @@ import globalStyles from '../styles';
 class TransactionDetailPage extends React.Component {
   constructor(props) {
       super(props);
+      const cookies = new Cookies();
+      const email = cookies.get('email');
       this.handlePageChanged = this.handlePageChanged.bind(this);
       this.state = {
+        email: email,
         transList: [],
         showCheckboxes: false,
         total:       0,
@@ -39,6 +42,7 @@ class TransactionDetailPage extends React.Component {
     var self = this;
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/all-transactions', {
+      email: self.state.email,
       offset:offset
     })
     .then(function (response) {
