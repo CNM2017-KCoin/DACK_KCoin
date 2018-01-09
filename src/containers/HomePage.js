@@ -32,7 +32,8 @@ class HomePage extends React.Component {
     } else if(role == "admin"){
       this.menus = [
           { text: 'Danh sách người dùng', icon: <HomeIco/>, link: '/all_users' },
-          { text: 'Danh sách giao dịch', icon: <DetailIco/>, link: '/all_transactions' }
+          { text: 'Danh sách giao dịch', icon: <DetailIco/>, link: '/all_transactions' },
+          { text: 'Lịch sử giao dịch', icon: <DetailIco/>, link: '/logs' }
         ];
     } else {
       this.menus = [];
