@@ -17,7 +17,6 @@ import LeftIco from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import RightIco from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import TextField from 'material-ui/TextField';
 import Pager from 'react-pager';
-import {connect} from 'react-redux';
 // import * as actions from './../actions/index.js';
 import globalStyles from '../styles';
 
@@ -92,6 +91,7 @@ class TransactionDetailPage extends React.Component {
 
   handlePageChanged (newPage) {
     console.log(newPage);
+    this.loadData(newPage);
     this.setState({ 
       current: newPage
     });
@@ -118,16 +118,20 @@ class TransactionDetailPage extends React.Component {
         fontWeight: 400,
       },
       columnsTable: {
+        id: {
+          width: '5%',
+          fontSize: 11
+        },
         timestamp: {
-          width: '13%',
+          width: '12%',
           fontSize: 11
         },
         senderAddress: {
-          width: '20%',
+          width: '18%',
           fontSize: 11
         },
         receiverAddress: {
-          width: '20%',
+          width: '18%',
           fontSize: 11
         },
         amount: {
@@ -138,6 +142,11 @@ class TransactionDetailPage extends React.Component {
           fontSize: 11
         },
         index: {
+          width: '10%'
+        },
+        status_creating: {
+          color: 'blue',
+          fontWeight: 'bold',
           width: '10%'
         },
         status_success: {
@@ -174,12 +183,13 @@ class TransactionDetailPage extends React.Component {
           <h3 style={globalStyles.navigation}>Ví KCoin / Chi tiết giao dịch</h3>
           <div>
                 <Paper style={globalStyles.paper}>
-                  <h3 style={globalStyles.title}>Giao dịch nhận tiền</h3>
+                  <h3 style={globalStyles.title}>Chi tiết giao dịch</h3>
                   <div>
                     <Table>
                       <TableHeader adjustForCheckbox={this.state.showCheckboxes}
                                     displaySelectAll={this.state.showCheckboxes}>
                         <TableRow>
+                          <TableHeaderColumn style={styles.columnsTable.id}>ID</TableHeaderColumn>
                           <TableHeaderColumn style={styles.columnsTable.timestamp}>Time</TableHeaderColumn>
                           <TableHeaderColumn style={styles.columnsTable.hash}>Ref Output Hash</TableHeaderColumn>
                           <TableHeaderColumn style={styles.columnsTable.index}>Ref Index</TableHeaderColumn>
@@ -194,6 +204,11 @@ class TransactionDetailPage extends React.Component {
                           var statusStyle = {};
                           var statusText = '';
                           switch(item.status) {
+                            case 'creating': {
+                              statusStyle = styles.columnsTable.status_creating;
+                              statusText = "Đã khởi tạo";
+                              break;
+                            }
                             case 'waiting': {
                               statusStyle = styles.columnsTable.status_waiting;
                               statusText = "Đang xử lý";
@@ -201,7 +216,7 @@ class TransactionDetailPage extends React.Component {
                             }
                             case 'fail': {
                               statusStyle = styles.columnsTable.status_fail;
-                              statusText = "Thất bại";
+                              statusText = "Đã hủy";
                               break;
                             }
                             case 'success': {
@@ -212,12 +227,13 @@ class TransactionDetailPage extends React.Component {
                           }
                           // console.log(statusStyle);
                           return(
-                            <TableRow key={item._id}>
-                              <TableRowColumn style={styles.columnsTable.timestamp}>12/12/2017 12:12:12</TableRowColumn>
-                              <TableRowColumn style={styles.columnsTable.hash}>{item.ref_hash}</TableRowColumn>
-                              <TableRowColumn style={styles.columnsTable.index}>{item.ref_index}</TableRowColumn>
+                            <TableRow key={item.transaction_id}>
+                              <TableRowColumn style={styles.columnsTable.id}>{item.transaction_id}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.timestamp}>{item.timestamp}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.hash}>{item.ref_hash==-1?'null':item.ref_hash}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.index}>{item.ref_index==-1?'null':item.ref_index}</TableRowColumn>
                               <TableRowColumn style={styles.columnsTable.amount}>{item.amount}</TableRowColumn>
-                              <TableRowColumn style={styles.columnsTable.senderAddress}>{item.sender_address}</TableRowColumn>
+                              <TableRowColumn style={styles.columnsTable.senderAddress}>{item.sender_address==-1?'null':item.sender_address}</TableRowColumn>
                               <TableRowColumn style={styles.columnsTable.receiverAddress}>{item.receiver_address}</TableRowColumn>
                               <TableRowColumn style={statusStyle}>{statusText}</TableRowColumn>
                             </TableRow>                       
