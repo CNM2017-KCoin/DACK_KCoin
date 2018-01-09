@@ -32,52 +32,52 @@ class AddTransactionPage extends React.Component {
     }
   }
 
-  handleOpenVertify = () => {
-    this.setState({open: true});
-  };
+  // handleOpenVertify = () => {
+  //   this.setState({open: true});
+  // };
 
-  postTransaction = (event) => {
-    const txtVertifyPass = document.getElementById('vertify_pass');
-    const txtCode = document.getElementById('code');
+  // postTransaction = (event) => {
+  //   const txtVertifyPass = document.getElementById('vertify_pass');
+  //   const txtCode = document.getElementById('code');
 
-    if(txtVertifyPass.value == "") {
-      this.setState({ errorTxtVertifyPass: 'Vertify Password is required' })
-      return;
-    }
-    if(txtCode.value == "") {
-      this.setState({ errorTxtCode: 'Code is required' })
-      return;
-    }
+  //   if(txtVertifyPass.value == "") {
+  //     this.setState({ errorTxtVertifyPass: 'Vertify Password is required' })
+  //     return;
+  //   }
+  //   if(txtCode.value == "") {
+  //     this.setState({ errorTxtCode: 'Code is required' })
+  //     return;
+  //   }
 
-    //post transaction
-    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
-    axios.post(apiLink+'/send', {
-      code: txtCode.value,
-      password: txtVertifyPass.value,
-      email: this.state.email,
-      receiver_address: this.state.receiver_address,
-      amount: this.state.amount
-    })
-    .then(function (response) {
-      console.log(response);
-      if(response.data.status == 200){
-        alert('Gửi giao dịch thành công!');
-      } else if(response.status == 400) {
-        alert('Số dư trong tài khoản không đủ để thực hiện giao dịch');
-      } else {
-        alert('Giao dịch không thành công');
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert('Giao dịch thất bại');
-    });
+  //   //post transaction
+  //   const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+  //   axios.post(apiLink+'/send', {
+  //     code: txtCode.value,
+  //     password: txtVertifyPass.value,
+  //     email: this.state.email,
+  //     receiver_address: this.state.receiver_address,
+  //     amount: this.state.amount
+  //   })
+  //   .then(function (response) {
+  //     console.log(response);
+  //     if(response.data.status == 200){
+  //       alert('Gửi giao dịch thành công!');
+  //     } else if(response.status == 400) {
+  //       alert('Số dư trong tài khoản không đủ để thực hiện giao dịch');
+  //     } else {
+  //       alert('Giao dịch không thành công');
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //     alert('Giao dịch thất bại');
+  //   });
 
-    this.setState({open: false});
-    browserHistory.push('/transactions');
-  };
+  //   this.setState({open: false});
+  //   browserHistory.push('/transactions');
+  // };
 
-  handleVertifyClick(event) {
+  handleClick(event) {
 
     var self = this;
 
@@ -95,22 +95,24 @@ class AddTransactionPage extends React.Component {
 
     //send vertify request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
-    axios.post(apiLink+'/send-validate', {
-      email: self.state.email
+    axios.post(apiLink+'/create-transaction', {
+      email: self.state.email,
+      receiver_address: txtAddress.value,
+      amout: txtAmount.value
     })
     .then(function (response) {
       console.log(response);
       if(response.data.status == 200){
-        alert('Yêu cầu xác nhận thành công!');
-
-        this.setState({
-          receiver_address: txtAddress.value,
-          amount: txtAmount.value
-        })
-        this.handleOpenVertify();
+        alert('Khởi tạo giao dịch thành công!');
+        browserHistory.push('/transactions');
+        // this.setState({
+        //   receiver_address: txtAddress.value,
+        //   amount: txtAmount.value
+        // })
+        // this.handleOpenVertify();
 
       } else {
-        alert('Yêu cầu xác nhận thất bại');
+        alert('Khởi tạo giao dịch thất bại');
         return;
       }
 
@@ -142,25 +144,25 @@ class AddTransactionPage extends React.Component {
     }
   }
 
-  onDialogChange(event, newValue) {
-    if (event.target.value == '') {
-      switch(event.target.id) {
-        case 'vertify_pass': {
-          this.setState({ errorTxtVertifyPass: 'Vertify Password is required' });
-          return;
-        }
-        case 'code': {
-          this.setState({ errorTxtCode: 'Code is required' });
-          return;
-        }
-      }
-    } else {
-      this.setState ({ 
-        errorTxtVertifyPass: '', 
-        errorTxtCode: ''
-      });
-    }
-  }
+  // onDialogChange(event, newValue) {
+  //   if (event.target.value == '') {
+  //     switch(event.target.id) {
+  //       case 'vertify_pass': {
+  //         this.setState({ errorTxtVertifyPass: 'Vertify Password is required' });
+  //         return;
+  //       }
+  //       case 'code': {
+  //         this.setState({ errorTxtCode: 'Code is required' });
+  //         return;
+  //       }
+  //     }
+  //   } else {
+  //     this.setState ({ 
+  //       errorTxtVertifyPass: '', 
+  //       errorTxtCode: ''
+  //     });
+  //   }
+  // }
 
   // handleClick(event){
   //   const email = document.getElementById('email').value;
@@ -226,41 +228,41 @@ class AddTransactionPage extends React.Component {
       }
     };
 
-    var context =  (
-      <form>
-        <TextField
-          id="vertify_pass"
-          hintText="Vertify Password"
-          floatingLabelText="Vertify Password"
-          fullWidth={true}
-          type="password"
-          errorText= {this.state.errorTxtVertifyPass}
-          onChange={this.onDialogChange.bind(this)}
-        />
+    // var context =  (
+    //   <form>
+    //     <TextField
+    //       id="vertify_pass"
+    //       hintText="Vertify Password"
+    //       floatingLabelText="Vertify Password"
+    //       fullWidth={true}
+    //       type="password"
+    //       errorText= {this.state.errorTxtVertifyPass}
+    //       onChange={this.onDialogChange.bind(this)}
+    //     />
 
-        <TextField
-          id="code"
-          hintText="Code"
-          floatingLabelText="Code"
-          fullWidth={true}
-          errorText= {this.state.errorTxtCode}
-          onChange={this.onDialogChange.bind(this)}
-        />
+    //     <TextField
+    //       id="code"
+    //       hintText="Code"
+    //       floatingLabelText="Code"
+    //       fullWidth={true}
+    //       errorText= {this.state.errorTxtCode}
+    //       onChange={this.onDialogChange.bind(this)}
+    //     />
 
-        <Divider/>
+    //     <Divider/>
 
-        <div style={styles.buttons}>
-          <Link to="/transactions">
-            <RaisedButton label="Thoát"/>
-          </Link>
+    //     <div style={styles.buttons}>
+    //       <Link to="/transactions">
+    //         <RaisedButton label="Thoát"/>
+    //       </Link>
 
-          <RaisedButton label="Gửi"
-            style={styles.saveButton}
-            onClick={(event) => this.postTransaction(event)}
-            primary={true}/>
-        </div>
-      </form>
-    );
+    //       <RaisedButton label="Gửi"
+    //         style={styles.saveButton}
+    //         onClick={(event) => this.postTransaction(event)}
+    //         primary={true}/>
+    //     </div>
+    //   </form>
+    // );
 
     return (
       <PageBase title="Khởi tạo giao dịch"
@@ -293,22 +295,24 @@ class AddTransactionPage extends React.Component {
               <RaisedButton label="Thoát"/>
             </Link>
 
-            <RaisedButton label="Xác nhận"
+            <RaisedButton label="Khởi tạo"
               style={styles.saveButton}
-              onClick={(event) => this.handleVertifyClick(event)}
+              onClick={(event) => this.handleClick(event)}
               primary={true}/>
           </div>
         </form>
-        <Dialog
-            title="Xác nhận giao dịch"
-            modal={true}
-            open={this.state.open}>
-            <div>Vui lòng kiểm tra email để lấy mã xác nhận cho giao dịch</div>
-            {context}
-          </Dialog>
       </PageBase>
     );
   };
 }
 
 export default AddTransactionPage;
+
+
+        // <Dialog
+        //   title="Xác nhận giao dịch"
+        //   modal={true}
+        //   open={this.state.open}>
+        //   <div>Vui lòng kiểm tra email để lấy mã xác nhận cho giao dịch</div>
+        //   {context}
+        // </Dialog>
