@@ -18,7 +18,7 @@ import Data from '../data';
 // import {connect} from 'react-redux';
 // import * as actions from './../actions/index.js';
 
-class DashboardPage extends React.Component {
+class UserDetailPage extends React.Component {
   constructor(props) {
     super(props);
     this.handlePageChanged = this.handlePageChanged.bind(this);
@@ -197,7 +197,7 @@ class DashboardPage extends React.Component {
                   </TableHeader>
                   <TableBody displayRowCheckbox={this.state.showCheckboxes}>
                     {admin.users.map(item => 
-                        <TableRow key={item._id}>
+                        <TableRow key={item.email}>
                           <TableRowColumn style={styles.columnsTable.email}>{item.email}</TableRowColumn>
                           <TableRowColumn style={styles.columnsTable.address}>{item.address}</TableRowColumn>
                           <TableRowColumn style={styles.columnsTable.actual_amount}>{item.actual_amount}</TableRowColumn>
@@ -227,10 +227,4 @@ class DashboardPage extends React.Component {
   }
 }
 
-const mapStateToProps = (state) =>{
-  return {
-    user: state.mainReducer.user
-  };
-}
-// export default connect (mapStateToProps)(DashboardPage);
-export default DashboardPage;
+export default UserDetailPage;
