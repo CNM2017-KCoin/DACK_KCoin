@@ -7,6 +7,7 @@ import AddTransactionPage from './containers/AddTransactionPage';
 import RegisterPage from './containers/RegisterPage';
 import VertifyPage from './containers/VertifyPage';
 import TransactionDetailPage from './containers/TransactionDetailPage';
+import LogTransactionPage from './containers/LogTransactionPage';
 import AllTransactionsPage from './containers/AllTransactionsPage';
 import UserDetailPage from './containers/UserDetailPage';
 import Dashboard from './containers/DashboardPage';
@@ -20,6 +21,7 @@ export default (
       <Route path="dashboard" component={Dashboard}/>
       <Route path="addTransaction" component={AddTransactionPage}/>
       <Route path="transactions" component={TransactionDetailPage}/>
+      <Route path="logs" component={LogTransactionPage}/>
       <Route path="all_transactions" component={AllTransactionsPage}/>
       <Route path="all_users" component={UserDetailPage}/>
       <Route path="*" component={NotFoundPage}/>
