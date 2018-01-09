@@ -41,23 +41,6 @@ class DashboardPage extends React.Component {
     
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
-    // axios.post(apiLink+'/api/transactions', {
-    //   "email":self.state.email
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    //   if(response.status ==  200) {
-    //     // browserHistory.push('/login');
-    //   } else  {
-    //     alert('Load failed');
-    //   }
-    //   return;
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    //   alert('Load failed', error);
-    //   return;
-    // });
 
     axios.post(apiLink+'/api/user-info', {
       "email":self.state.email
