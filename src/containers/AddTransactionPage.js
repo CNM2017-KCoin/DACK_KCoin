@@ -10,6 +10,7 @@ import Divider from 'material-ui/Divider';
 import FlatButton from 'material-ui/FlatButton';
 import PageBase from '../components/PageBase';
 import Cookies from 'universal-cookie';
+import AutoComplete from 'material-ui/AutoComplete';
 import Data from '../data';
 
 class AddTransactionPage extends React.Component {
@@ -73,39 +74,46 @@ class AddTransactionPage extends React.Component {
 
   handleFindClick(event) {
 
-    // var self = this;
+    const txtEmail = document.getElementById('receiver_email');
+    const txtAddress = document.getElementById('receiver_address');
 
-    // const txtEmail = document.getElementById('receiver_email');
-    // const txtAddress = document.getElementById('receiver_address');
+    if(txtEmail.value == "") {
+      this.setState({ errorTxtEmail: 'Input email to find address' })
+      return;
+    }
 
-    // if(txtEmail.value == "") {
-    //   this.setState({ errorTxtEmail: 'Input email to find address' })
-    //   return;
-    // }
+    var self = this;
 
-    // //find address
-    // const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
-    // axios.post(apiLink+'/api/find-address', {
-    //   email: self.state.email,
-    //   receiver_email: txtEmail.value
-    // })
-    // .then(function (response) {
-    //   console.log(response);
-    //   if(response.data.status == 200){
-    //     txtAddress.value = response.data.data.address;
-    //   } else {
-    //     this.setState({ errorTxtEmail: 'Email does not exist!' })
-    //     return;
-    //   }
+    //find address
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    axios.post(apiLink+'/api/find-address', {
+      email: self.state.email,
+      receiver_email: txtEmail.value
+    })
+    .then(function (response) {
+      console.log(response.data);
+      if(response.data.status == 200){
+        self.setState({
+          receiver_address:response.data.data.address
+        })
+      } else {
+        this.setState({ errorTxtEmail: 'Email does not exist!' })
+        return;
+      }
 
-    // })
-    // .catch(function (error) {
-    //   alert('Thao tác thất bại');
-    // });
+    })
+    .catch(function (error) {
+      alert('Thao tác thất bại');
+    });
 
   }
 
+  handleAutoCompleteClick(chosenRequest) {
+    
+  }
+
   onChange(event, newValue) {
+
     if (event.target.value == '') {
       switch(event.target.id) {
         case 'receiver_address': {
@@ -118,10 +126,23 @@ class AddTransactionPage extends React.Component {
         }
       }
     } else {
-      this.setState ({ 
-        errorTxtAddress: '', 
-        errorTxtAmount: ''
-      });
+      switch(event.target.id) {
+        case 'receiver_address': { 
+          this.setState ({ 
+            receiver_address: event.target.value,
+            errorTxtAddress: '',
+            errorTxtAmount: ''
+          });
+          return;
+        }
+        case 'amount': {       
+          this.setState ({ 
+            errorTxtAddress: '', 
+            errorTxtAmount: ''
+          });
+          return;
+        }
+      }
     }
   }
 
@@ -157,22 +178,40 @@ class AddTransactionPage extends React.Component {
         marginLeft: 5
       },
       receiver_email: {
-        width: '50%'
+        width: '80%'
       }
     };
+
+    const emailList = [
+      {
+        'email':'red1',
+        'address':'123'
+      },
+      {
+        'email':'Orange',
+        'address':'1235'
+      },
+      {
+        'email':'vuquang3101@gmail.com',
+        'address':'1235'
+      }
+    ];
 
     return (
       <PageBase title="Khởi tạo giao dịch"
                 navigation="Ví KCoin / Khởi tạo giao dịch">
         <form>
 
-          <TextField
-              id="receiver_email"
-              style = {styles.receiver_email}
-              hintText="Input Receiver Email (Optional)"
-              floatingLabelText="Receiver Email"
-              errorText= {this.state.errorTxtEmail}
-              fullWidth={true}/>
+          <AutoComplete
+                id="receiver_email"
+                style = {styles.receiver_email}
+                floatingLabelText="Type Receiver Email (Optional)" 
+                errorText= {this.state.errorTxtEmail}
+                filter={AutoComplete.caseInsensitiveFilter}
+                fullWidth={true}
+                onNewRequest = {(chosenRequest) => this.handleAutoCompleteClick(chosenRequest)}
+                dataSource={emailList}/>
+
           <RaisedButton label="Tìm địa chỉ"
               style={styles.saveButton}
               onClick={(event) => this.handleFindClick(event)}
@@ -183,6 +222,7 @@ class AddTransactionPage extends React.Component {
             hintText="Receiver Address"
             floatingLabelText="Receiver Address"
             fullWidth={true}
+            value = {this.state.receiver_address}
             errorText= {this.state.errorTxtAddress}
             onChange={this.onChange.bind(this)}
           />
