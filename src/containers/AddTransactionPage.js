@@ -21,6 +21,7 @@ class AddTransactionPage extends React.Component {
     const cookies = new Cookies();
     const email = cookies.get('email');
     this.state = { 
+      recentEmailList: [],
       email: email,
       receiver_address:'',
       amount:'',
@@ -28,6 +29,46 @@ class AddTransactionPage extends React.Component {
       errorTxtAddress: '',
       errorTxtAmount: ''
     }
+  }
+
+  loadEmailList() {
+    var self = this; 
+    //send request
+    const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+
+    axios.post(apiLink+'/api/find-recent-emails', {
+      email:self.state.email
+    })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.status ==  200) {
+        var res = response.data;
+        var arr = res.data.emailList;
+        var newArr = [];
+        for (var i = arr.length - 1; i >= 0; i--) {
+          newArr.push(arr[i].old_email);
+        }
+        self.setState({
+          recentEmailList:newArr
+        })
+      } else  {
+        alert('Load failed:', res.data.error);
+      }
+      return;
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert('Load failed', error);
+      return;
+    });
+  }
+
+  componentWillReceiveProps() {
+    this.loadEmailList();
+  }
+
+  componentDidMount() {
+    this.loadEmailList();
   }
 
   handleClick(event) {
@@ -106,10 +147,6 @@ class AddTransactionPage extends React.Component {
       alert('Thao tác thất bại');
     });
 
-  }
-
-  handleAutoCompleteClick(chosenRequest) {
-    
   }
 
   onChange(event, newValue) {
@@ -209,8 +246,7 @@ class AddTransactionPage extends React.Component {
                 errorText= {this.state.errorTxtEmail}
                 filter={AutoComplete.caseInsensitiveFilter}
                 fullWidth={true}
-                onNewRequest = {(chosenRequest) => this.handleAutoCompleteClick(chosenRequest)}
-                dataSource={emailList}/>
+                dataSource={this.state.recentEmailList}/>
 
           <RaisedButton label="Tìm địa chỉ"
               style={styles.saveButton}
