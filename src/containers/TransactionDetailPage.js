@@ -51,7 +51,8 @@ class TransactionDetailPage extends React.Component {
         receiverReport: 'Đang xử lý...',
         errorTxtVertifyPass: '',
         errorTxtCode: '',
-        open:false
+        open:false,
+        failOpen:false
       };
   }
   
@@ -250,6 +251,11 @@ class TransactionDetailPage extends React.Component {
     browserHistory.push('/transactions');
   }
 
+  hideFailDialog() {
+    this.setState({failOpen: false});
+    browserHistory.push('/transactions');
+  }
+
   handleActiveClick(event, item) {
     console.log('active');
     var self = this;
@@ -280,7 +286,15 @@ class TransactionDetailPage extends React.Component {
 
   handleCancelClick(event, item) {
     console.log('cancel');
+    this.setState({
+          currentItem: item,
+          failOpen: true
+        });
+  }
+
+  removeTransaction(event) {
     var self = this;
+    var item = this.state.currentItem;
     //send vertify request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/cancel-transaction', {
@@ -291,6 +305,8 @@ class TransactionDetailPage extends React.Component {
       console.log(response);
       if(response.data.status == 200){
         alert('Đã hủy giao dịch thành công!');
+        self.setState({failOpen: false});
+        browserHistory.push('/transactions');
       } else {
         alert('Hủy giao dịch thất bại');
       }
@@ -298,7 +314,6 @@ class TransactionDetailPage extends React.Component {
 
     })
     .catch(function (error) {
-      console.log(error);
       alert('Yêu cầu thất bại');
     });
   }
@@ -420,6 +435,23 @@ class TransactionDetailPage extends React.Component {
             primary={true}/>
         </div>
       </form>
+    );
+
+    var failcontext =  (
+      <div>
+        <Divider/>
+        <div style={styles.buttons}>
+          <Link to="/transactions">
+            <RaisedButton label="Trở về" 
+            onClick={(event) => this.hideFailDialog()}/>
+          </Link>
+
+          <RaisedButton label="Xóa"
+            style={styles.saveButton}
+            onClick={(event) => this.removeTransaction(event)}
+            primary={true}/>
+        </div>
+      </div>
     );
 
 
@@ -619,6 +651,14 @@ class TransactionDetailPage extends React.Component {
             open={this.state.open}>
               <div>Vui lòng kiểm tra email để lấy mã xác nhận cho giao dịch</div>
               {context}
+          </Dialog>
+
+          <Dialog
+            title="Xác nhận hủy giao dịch"
+            modal={true}
+            open={this.state.failOpen}>
+              <div>Bạn có thực sự muốn hủy giao dịch không?</div>
+              {failcontext}
           </Dialog>
         </div>
       );
