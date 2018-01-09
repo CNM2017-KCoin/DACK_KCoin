@@ -54,9 +54,6 @@ const LeftDrawer = (props) => {
           {props.role}
         </div>
         <div style={styles.avatar.div}>
-          <Avatar src="http://www.material-ui.com/images/uxceo-128.jpg"
-                  size={50}
-                  style={styles.avatar.icon}/>
           <span style={styles.avatar.span}>{props.username}</span>
         </div>
         <div>

@@ -73,10 +73,35 @@ class AddTransactionPage extends React.Component {
 
   handleFindClick(event) {
 
+    // var self = this;
 
+    // const txtEmail = document.getElementById('receiver_email');
+    // const txtAddress = document.getElementById('receiver_address');
 
+    // if(txtEmail.value == "") {
+    //   this.setState({ errorTxtEmail: 'Input email to find address' })
+    //   return;
+    // }
 
+    // //find address
+    // const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
+    // axios.post(apiLink+'/api/find-address', {
+    //   email: self.state.email,
+    //   receiver_email: txtEmail.value
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    //   if(response.data.status == 200){
+    //     txtAddress.value = response.data.data.address;
+    //   } else {
+    //     this.setState({ errorTxtEmail: 'Email does not exist!' })
+    //     return;
+    //   }
 
+    // })
+    // .catch(function (error) {
+    //   alert('Thao tác thất bại');
+    // });
 
   }
 
