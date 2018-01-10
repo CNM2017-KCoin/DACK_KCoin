@@ -11,6 +11,7 @@ import InfoBox from '../components/dashboard/InfoBox';
 import RecentTransaction from '../components/dashboard/RecentTransaction';
 import globalStyles from '../styles';
 import Cookies from 'universal-cookie';
+import LinearProgress from 'material-ui/LinearProgress';
 import QRCode from 'qrcode.react';
 import Data from '../data';
 // import {connect} from 'react-redux';
@@ -29,7 +30,7 @@ class DashboardPage extends React.Component {
       address:"",
       actual_amount: 0,
       available_amount: 0,
-      receiverReport: 'Đang xử lý...',
+      receiverReport: (<LinearProgress mode="indeterminate" />),
       receiverTrans: []
     }
   }
@@ -83,7 +84,7 @@ class DashboardPage extends React.Component {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
-        let receiverReport = 'Đang xử lý...';
+        let receiverReport = (<LinearProgress mode="indeterminate" />);
         if(res.data.receiver_trans.length == 0) {
           receiverReport = 'Không tìm thấy giao dịch nào';
         }

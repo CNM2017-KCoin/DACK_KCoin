@@ -15,6 +15,7 @@ import Slider from 'material-ui/Slider';
 import IconButton from 'material-ui/IconButton';
 import ActiveIco from 'material-ui/svg-icons/action/done';
 import CancelIco from 'material-ui/svg-icons/content/clear';
+import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
@@ -49,8 +50,8 @@ class TransactionDetailPage extends React.Component {
         receiverCurrent:     0,
         receiverVisiblePage: 1,
         isReceiverTab: true, //send,receive
-        senderReport: 'Đang xử lý...',
-        receiverReport: 'Đang xử lý...',
+        senderReport: (<LinearProgress mode="indeterminate" />),
+        receiverReport: (<LinearProgress mode="indeterminate" />),
         errorTxtVertifyPass: '',
         errorTxtCode: '',
         open:false,
@@ -98,7 +99,7 @@ class TransactionDetailPage extends React.Component {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
-        let receiverReport = 'Đang xử lý...';
+        let receiverReport = (<LinearProgress mode="indeterminate" />);
         if(res.data.receiver_trans.length == 0) {
           receiverReport = 'Không tìm thấy giao dịch nào';
         }
@@ -131,7 +132,7 @@ class TransactionDetailPage extends React.Component {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
-        let senderReport = 'Đang xử lý...';
+        let senderReport = (<LinearProgress mode="indeterminate" />);
         if(res.data.sender_trans.length == 0) {
           senderReport = 'Không tìm thấy giao dịch nào';
         }

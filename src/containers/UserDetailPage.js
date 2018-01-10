@@ -11,6 +11,7 @@ import UsedMoneyIco from 'material-ui/svg-icons/editor/monetization-on';
 import AddressIco from 'material-ui/svg-icons/action/code';
 import InfoBox from '../components/dashboard/InfoBox';
 import RecentTransaction from '../components/dashboard/RecentTransaction';
+import LinearProgress from 'material-ui/LinearProgress';
 import globalStyles from '../styles';
 import Cookies from 'universal-cookie';
 import Pager from 'react-pager';
@@ -23,8 +24,9 @@ class UserDetailPage extends React.Component {
     super(props);
     this.handlePageChanged = this.handlePageChanged.bind(this);
 
-    const email = Cookies.get('email');
-    const password = Cookies.get('password');
+    const cookies = new Cookies();
+    const email = cookies.get('email');
+    const password = cookies.get('password');
 
     this.state = {
       email: email,
@@ -36,7 +38,8 @@ class UserDetailPage extends React.Component {
       showCheckboxes: false,
       total:       0,
       current:     0,
-      visiblePages: 1
+      visiblePages: 1,
+      report: (<LinearProgress mode="indeterminate" />)
     }
   }
 
@@ -63,8 +66,14 @@ class UserDetailPage extends React.Component {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
+
+        let report = (<LinearProgress mode="indeterminate" />);
+        if(res.data.length == 0) {
+          report = 'Không tìm thấy báo cáo giao dịch nào';
+        }
         self.setState({
-          users: res.data.users
+          users: res.data.users,
+          report: report
         })
       } else  {
         alert('Load users failed:', res.data.error);
@@ -157,83 +166,89 @@ class UserDetailPage extends React.Component {
     // const user = this.props.user;
     const admin = this.state;
     const users = this.state.users;
-    if(users == null) {
-      return(<div>The responsive it not here yet!</div>);
-    }
-    return (
-      <div>
+    if(users == null || users.length == 0) {
+      return (
+        <div>
         <h3 style={globalStyles.navigation}>Ví KCoin / Trang chủ</h3>
+          <h3>{this.state.report}</h3>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h3 style={globalStyles.navigation}>Ví KCoin / Trang chủ</h3>
 
-        <div className="row">
+          <div className="row">
 
-          <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-15 ">
-            <InfoBox Icon={RealMoneyIco}
-                     color={pink600}
-                     title="Tổng số dư thực tế"
-                     value={admin.total_actual_amount}
-            />
+            <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-15 ">
+              <InfoBox Icon={RealMoneyIco}
+                       color={pink600}
+                       title="Tổng số dư thực tế"
+                       value={admin.total_actual_amount}
+              />
+            </div>
+
+            <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-15 ">
+              <InfoBox Icon={UsedMoneyIco}
+                       color={purple600}
+                       title="Tổng số dư khả dụng"
+                       value={admin.total_available_amount}
+              />
+            </div>
+            <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-15 ">
+              <InfoBox Icon={AddressIco}
+                       color={orange600}
+                       title="Tổng số người dùng"
+                       value={admin.total_users}
+              />
+            </div>
           </div>
+          <div className="row">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
+              <Paper style={globalStyles.paper}>
+                <h3 style={globalStyles.title}>Danh sách người dùng</h3>
 
-          <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-15 ">
-            <InfoBox Icon={UsedMoneyIco}
-                     color={purple600}
-                     title="Tổng số dư khả dụng"
-                     value={admin.total_available_amount}
-            />
-          </div>
-          <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-15 ">
-            <InfoBox Icon={AddressIco}
-                     color={orange600}
-                     title="Tổng số người dùng"
-                     value={admin.total_users}
-            />
+                <div>
+                  <Table>
+                    <TableHeader adjustForCheckbox={this.state.showCheckboxes}
+                                  displaySelectAll={this.state.showCheckboxes}>
+                      <TableRow>
+                        <TableHeaderColumn style={styles.columnsTable.email}>Email</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.address}>Địa chỉ</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.actual_amount}>Số dư khả dụng</TableHeaderColumn>
+                        <TableHeaderColumn style={styles.columnsTable.available_amount}>Số dư thực tế</TableHeaderColumn>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={this.state.showCheckboxes}>
+                      {admin.users.map(item => 
+                          <TableRow key={item.email}>
+                            <TableRowColumn style={styles.columnsTable.email}>{item.email}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.address}>{item.address}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.actual_amount}>{item.actual_amount}</TableRowColumn>
+                            <TableRowColumn style={styles.columnsTable.available_amount}>{item.available_amount}</TableRowColumn>
+                          </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                <div className="row">
+                  <Pager
+                    total={this.state.total}
+                    current={this.state.current}
+                    visiblePages={this.state.visiblePages}
+                    titles={{ first: '<|', last: '>|' }}
+                    className="pagination-sm pull-right"
+                    onPageChanged={this.handlePageChanged}
+                  />
+                </div>
+                <div style={globalStyles.clear}/>
+              </Paper>
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-15 ">
-            <Paper style={globalStyles.paper}>
-              <h3 style={globalStyles.title}>Danh sách người dùng</h3>
-
-              <div>
-                <Table>
-                  <TableHeader adjustForCheckbox={this.state.showCheckboxes}
-                                displaySelectAll={this.state.showCheckboxes}>
-                    <TableRow>
-                      <TableHeaderColumn style={styles.columnsTable.email}>Email</TableHeaderColumn>
-                      <TableHeaderColumn style={styles.columnsTable.address}>Địa chỉ</TableHeaderColumn>
-                      <TableHeaderColumn style={styles.columnsTable.actual_amount}>Số dư khả dụng</TableHeaderColumn>
-                      <TableHeaderColumn style={styles.columnsTable.available_amount}>Số dư thực tế</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={this.state.showCheckboxes}>
-                    {admin.users.map(item => 
-                        <TableRow key={item.email}>
-                          <TableRowColumn style={styles.columnsTable.email}>{item.email}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsTable.address}>{item.address}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsTable.actual_amount}>{item.actual_amount}</TableRowColumn>
-                          <TableRowColumn style={styles.columnsTable.available_amount}>{item.available_amount}</TableRowColumn>
-                        </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-
-              <div className="row">
-                <Pager
-                  total={this.state.total}
-                  current={this.state.current}
-                  visiblePages={this.state.visiblePages}
-                  titles={{ first: '<|', last: '>|' }}
-                  className="pagination-sm pull-right"
-                  onPageChanged={this.handlePageChanged}
-                />
-              </div>
-              <div style={globalStyles.clear}/>
-            </Paper>
-          </div>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }
 

@@ -15,6 +15,7 @@ import Slider from 'material-ui/Slider';
 import IconButton from 'material-ui/IconButton';
 import LeftIco from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import RightIco from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import LinearProgress from 'material-ui/LinearProgress';
 import TextField from 'material-ui/TextField';
 import Pager from 'react-pager';
 // import * as actions from './../actions/index.js';
@@ -35,7 +36,7 @@ class LogTransactionPage extends React.Component {
         total:       0,
         current:     0,
         visiblePage: 1,
-        report: 'Đang xử lý...'
+        report: (<LinearProgress mode="indeterminate" />)
       };
 
         // this.updateRows = this.updateRows.bind(this);
@@ -52,7 +53,7 @@ class LogTransactionPage extends React.Component {
       console.log(response);
       if(response.data.status ==  200) {
         var res = response.data;
-        let report = 'Đang xử lý...';
+        let report = (<LinearProgress mode="indeterminate" />);
         if(res.data.length == 0) {
           report = 'Không tìm thấy báo cáo giao dịch nào';
         }
