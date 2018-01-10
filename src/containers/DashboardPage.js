@@ -22,11 +22,13 @@ class DashboardPage extends React.Component {
 
     const cookies = new Cookies();
     const email = cookies.get('email');
+    const password = cookies.get('password');
     this.state = { 
+      email:email,
+      password: password,
       address:"",
       actual_amount: 0,
       available_amount: 0,
-      email:email,
       receiverReport: 'Đang xử lý...',
       receiverTrans: []
     }
@@ -43,7 +45,8 @@ class DashboardPage extends React.Component {
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
 
     axios.post(apiLink+'/api/user-info', {
-      "email":self.state.email
+      "email":self.state.email,
+      password: self.state.password
     })
     .then(function (response) {
       console.log(response);
@@ -68,12 +71,12 @@ class DashboardPage extends React.Component {
 
   loadReceiverData(offset) {
     var self = this;
-    console.log(offset+"  "+this.state.email);
   
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/transaction-input', {
       email:self.state.email, 
+      password: self.state.password,
       offset:offset
     })
     .then(function (response) {

@@ -20,9 +20,11 @@ class AddTransactionPage extends React.Component {
 
     const cookies = new Cookies();
     const email = cookies.get('email');
+    const password = cookies.get('password');
     this.state = { 
       recentEmailList: [],
       email: email,
+      password: password,
       receiver_address:'',
       amount:'',
       errorTxtEmail: '',
@@ -37,7 +39,8 @@ class AddTransactionPage extends React.Component {
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
 
     axios.post(apiLink+'/api/find-recent-emails', {
-      email:self.state.email
+      email:self.state.email,
+      password: self.state.password
     })
     .then(function (response) {
       console.log(response);
@@ -91,6 +94,7 @@ class AddTransactionPage extends React.Component {
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/create-transaction', {
       email: self.state.email,
+      password: self.state.password,
       receiver_address: txtAddress.value,
       amount: txtAmount.value
     })
@@ -129,6 +133,7 @@ class AddTransactionPage extends React.Component {
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/find-address', {
       email: self.state.email,
+      password: self.state.password,
       receiver_email: txtEmail.value
     })
     .then(function (response) {

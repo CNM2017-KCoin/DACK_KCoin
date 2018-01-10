@@ -33,8 +33,10 @@ class TransactionDetailPage extends React.Component {
       const cookies = new Cookies();
       const email = cookies.get('email');
       const role = cookies.get('role');
+      const password = cookies.get('password');
       this.state = {
         email: email,
+        password: password,
         role: role,
         currentItem: {},
         receiver_trans: [],
@@ -84,12 +86,12 @@ class TransactionDetailPage extends React.Component {
 
   loadReceiverData(offset) {
     var self = this;
-    console.log(offset+"  "+this.state.email);
   
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/transaction-input', {
       email:self.state.email, 
+      password:self.state.password, 
       offset:offset
     })
     .then(function (response) {
@@ -118,12 +120,11 @@ class TransactionDetailPage extends React.Component {
 
   loadSenderData(offset) {
     var self = this;
-
-    console.log(offset+"  "+this.state.email);
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/transaction-output', {
       email:self.state.email, 
+      password:self.state.password,
       offset:offset
     })
     .then(function (response) {
@@ -262,7 +263,8 @@ class TransactionDetailPage extends React.Component {
     //send vertify request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/send-validate', {
-      email: self.state.email
+      email: self.state.email,
+      password:self.state.password
     })
     .then(function (response) {
       console.log(response);
@@ -299,6 +301,7 @@ class TransactionDetailPage extends React.Component {
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/cancel-transaction', {
       email: self.state.email,
+      password:self.state.password,
       transaction_id: item.transaction_id
     })
     .then(function (response) {

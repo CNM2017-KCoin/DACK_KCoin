@@ -25,9 +25,11 @@ class TransactionDetailPage extends React.Component {
       super(props);
       const cookies = new Cookies();
       const email = cookies.get('email');
+      const password = cookies.get('password');
       this.handlePageChanged = this.handlePageChanged.bind(this);
       this.state = {
         email: email,
+        password: password,
         transList: [],
         showCheckboxes: false,
         total:       0,
@@ -43,6 +45,7 @@ class TransactionDetailPage extends React.Component {
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/all-transactions', {
       email: self.state.email,
+      password: self.state.password,
       offset:offset
     })
     .then(function (response) {

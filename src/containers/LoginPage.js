@@ -10,6 +10,7 @@ import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import TextField from 'material-ui/TextField';
 import ThemeDefault from '../theme-default';
 import Cookies from 'universal-cookie';
+import LinearProgress from 'material-ui/LinearProgress';
 import Data from '../data';
 
 const Utils = require('../services/utils');
@@ -21,7 +22,8 @@ class LoginPage extends React.Component {
 
     this.state = { 
       errorTxtEmail: '',
-      errorTxtPass: ''
+      errorTxtPass: '',
+      isLoading: false
     }
   }
 
@@ -74,6 +76,11 @@ class LoginPage extends React.Component {
     }
 
     var passwordHash = Utils.hash(txtPassword.value).toString('hex');
+
+    let self = this;
+    self.setState ({
+      isLoading: true
+    })
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/login', {
@@ -82,12 +89,15 @@ class LoginPage extends React.Component {
     })
     .then(function (response) {
       console.log(response);
+      self.setState ({
+          isLoading: false
+        })
       if(response.data.status == 200) {
         alert('Đăng nhập thành công!');
         let role = response.data.data.role.toLowerCase();//admin/user
         const cookies = new Cookies();
         cookies.set('email', txtEmail.value, { path: '/' });
-        // cookies.set('role', response.data.data.role, { path: '/' });
+        cookies.set('password', passwordHash, { path: '/' });
         cookies.set('role', role, { path: '/' });
         if(role == "admin") {
           browserHistory.push('/all_users');
@@ -97,77 +107,83 @@ class LoginPage extends React.Component {
       } else  {
         alert('Đăng nhập thất bại!', response.data.error);
       }
-      return;
     })
     .catch(function (error) {
       console.log(error);
       alert('Login failed', error);
-      return;
     });
 
   }
 
   render() {
 
-  const styles = {
-    loginContainer: {
-      minWidth: 320,
-      maxWidth: 400,
-      height: 'auto',
-      position: 'absolute',
-      top: '20%',
-      left: 0,
-      right: 0,
-      margin: 'auto'
-    },
-    paper: {
-      padding: 20,
-      overflow: 'auto'
-    },
-    buttonsDiv: {
-      textAlign: 'center',
-      padding: 10
-    },
-    flatButton: {
-      color: grey500
-    },
-    checkRemember: {
-      style: {
-        float: 'left',
-        maxWidth: 180,
-        paddingTop: 5
+    const styles = {
+      loginContainer: {
+        minWidth: 320,
+        maxWidth: 400,
+        height: 'auto',
+        position: 'absolute',
+        top: '20%',
+        left: 0,
+        right: 0,
+        margin: 'auto'
       },
-      labelStyle: {
+      paper: {
+        padding: 20,
+        overflow: 'auto'
+      },
+      buttonsDiv: {
+        textAlign: 'center',
+        padding: 10
+      },
+      flatButton: {
         color: grey500
       },
-      iconStyle: {
-        color: grey500,
-        borderColor: grey500,
-        fill: grey500
-      }
-    },
-    loginBtn: {
-      float: 'right'
-    },
-    btn: {
-      background: '#4f81e9',
-      color: white,
-      padding: 7,
-      borderRadius: 2,
-      margin: 2,
-      fontSize: 13
-    },
-    btnSpan: {
-      marginLeft: 5
-    },
-  };
+      checkRemember: {
+        style: {
+          float: 'left',
+          maxWidth: 180,
+          paddingTop: 5
+        },
+        labelStyle: {
+          color: grey500
+        },
+        iconStyle: {
+          color: grey500,
+          borderColor: grey500,
+          fill: grey500
+        }
+      },
+      loginBtn: {
+        float: 'right'
+      },
+      btn: {
+        background: '#4f81e9',
+        color: white,
+        padding: 7,
+        borderRadius: 2,
+        margin: 2,
+        fontSize: 13
+      },
+      btnSpan: {
+        marginLeft: 5
+      },
+    };
+
+    let loadingItem = {};
+    if(this.state.isLoading) {
+      loadingItem = (<LinearProgress mode="indeterminate" />);
+    } else {
+      loadingItem = (<div></div>);
+    }
+
     return (
       <MuiThemeProvider muiTheme={ThemeDefault}>
         <div>
           <div style={styles.loginContainer}>
 
+            {loadingItem}
             <Paper style={styles.paper}>
-
               <form>
                 <TextField
                   id="email"
@@ -204,6 +220,7 @@ class LoginPage extends React.Component {
               </form>
             </Paper>
           </div>
+          
         </div>
       </MuiThemeProvider>
     );

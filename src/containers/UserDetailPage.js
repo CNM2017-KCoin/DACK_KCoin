@@ -23,7 +23,12 @@ class UserDetailPage extends React.Component {
     super(props);
     this.handlePageChanged = this.handlePageChanged.bind(this);
 
+    const email = Cookies.get('email');
+    const password = Cookies.get('password');
+
     this.state = {
+      email: email,
+      password: password,
       total_users:0,
       total_actual_amount: 0,
       total_available_amount: 0,
@@ -50,6 +55,8 @@ class UserDetailPage extends React.Component {
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(apiLink+'/api/users', {
+      email: self.state.email,
+      password:self.state.password,
       "offset":offset
     })
     .then(function (response) {
@@ -77,7 +84,10 @@ class UserDetailPage extends React.Component {
     //send request
     const apiLink = 'https://api-dack-kcoin-wantien.herokuapp.com';
     axios.post(
-      apiLink+'/api/user-total-info'
+      apiLink+'/api/user-total-info', {
+        email: self.state.email,
+        password:self.state.password
+      }
     )
     .then(function (response) {
       console.log(response);
